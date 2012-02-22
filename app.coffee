@@ -4,11 +4,8 @@ $ ->
   game.run()
 
 class Hero
-  image: null
   ready: false
   speed: 256
-  x: null
-  y: null
 
   constructor: ->
     image = new Image
@@ -20,12 +17,6 @@ class Hero
     ctx.drawImage(@image, @x, @y) if @ready
 
 class Game
-  then: null
-  hero: null
-  canvas: null
-  ctx: null
-  keysDown: null
-
   setup: ->
     @canvas = document.createElement("canvas")
     @ctx = @canvas.getContext("2d")
@@ -38,7 +29,6 @@ class Game
       @keysDown[e.keyCode] = true
     $("body").keyup (e) =>
       delete @keysDown[e.keyCode]
-
 
   reset: ->
     @hero.x = @canvas.width / 2

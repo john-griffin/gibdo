@@ -12,15 +12,9 @@
 
   Hero = (function() {
 
-    Hero.prototype.image = null;
-
     Hero.prototype.ready = false;
 
     Hero.prototype.speed = 256;
-
-    Hero.prototype.x = null;
-
-    Hero.prototype.y = null;
 
     function Hero() {
       var image,
@@ -42,16 +36,6 @@
   })();
 
   Game = (function() {
-
-    Game.prototype.then = null;
-
-    Game.prototype.hero = null;
-
-    Game.prototype.canvas = null;
-
-    Game.prototype.ctx = null;
-
-    Game.prototype.keysDown = null;
 
     Game.prototype.setup = function() {
       var _this = this;
