@@ -16,6 +16,18 @@ class Hero
   draw: (ctx) ->
     ctx.drawImage(@image, @x, @y) if @ready
 
+class Background
+  ready: false
+
+  constructor: ->
+    image = new Image
+    image.src = "images/background.png"
+    image.onload = => @ready = true
+    @image = image
+
+  draw: (ctx) ->
+    ctx.drawImage(@image, 0, 0) if @ready
+
 class Game
   keysDown: {}
 
@@ -26,6 +38,7 @@ class Game
     @canvas.height = 480
     document.body.appendChild(@canvas)
     @hero = new Hero
+    @background = new Background
 
     $("body").keydown (e) =>
       @keysDown[e.keyCode] = true
@@ -47,6 +60,7 @@ class Game
     @hero.x += @hero.speed * modifier if 39 of @keysDown
 
   render: ->
+    @background.draw(@ctx)
     @hero.draw(@ctx)
 
   main: =>

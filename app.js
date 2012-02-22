@@ -1,5 +1,5 @@
 (function() {
-  var $, Game, Hero,
+  var $, Background, Game, Hero,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   $ = jQuery;
@@ -35,6 +35,29 @@
 
   })();
 
+  Background = (function() {
+
+    Background.prototype.ready = false;
+
+    function Background() {
+      var image,
+        _this = this;
+      image = new Image;
+      image.src = "images/background.png";
+      image.onload = function() {
+        return _this.ready = true;
+      };
+      this.image = image;
+    }
+
+    Background.prototype.draw = function(ctx) {
+      if (this.ready) return ctx.drawImage(this.image, 0, 0);
+    };
+
+    return Background;
+
+  })();
+
   Game = (function() {
 
     function Game() {
@@ -51,6 +74,7 @@
       this.canvas.height = 480;
       document.body.appendChild(this.canvas);
       this.hero = new Hero;
+      this.background = new Background;
       $("body").keydown(function(e) {
         return _this.keysDown[e.keyCode] = true;
       });
@@ -72,6 +96,7 @@
     };
 
     Game.prototype.render = function() {
+      this.background.draw(this.ctx);
       return this.hero.draw(this.ctx);
     };
 
