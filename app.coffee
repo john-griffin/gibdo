@@ -34,11 +34,8 @@ class Game
     document.body.appendChild(@canvas)
     @hero = new Hero
     @background = new Background
-
-    $("body").keydown (e) =>
-      @keysDown[e.keyCode] = true
-    $("body").keyup (e) =>
-      delete @keysDown[e.keyCode]
+    $("body").keydown (e) => @keysDown[e.keyCode] = true
+    $("body").keyup (e) => delete @keysDown[e.keyCode]
 
   reset: ->
     @hero.x = @canvas.width / 2
