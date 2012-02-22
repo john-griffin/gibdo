@@ -1,9 +1,12 @@
-$ -> new Game
+$ = jQuery
+$ -> 
+  game = new Game
+  game.run()
 
 class Hero
   image: null
   ready: false
-  speed: null
+  speed: 256
   x: null
   y: null
 
@@ -21,6 +24,7 @@ class Game
   hero: null
   canvas: null
   ctx: null
+  keysDown: null
 
   setup: ->
     @canvas = document.createElement("canvas")
@@ -30,12 +34,25 @@ class Game
     document.body.appendChild(@canvas)
     @hero = new Hero
 
+    $("body").keydown (e) =>
+      @keysDown[e.keyCode] = true
+    $("body").keyup (e) =>
+      delete @keysDown[e.keyCode]
+
+
   reset: ->
     @hero.x = @canvas.width / 2
     @hero.y = @canvas.height / 2
 
   update: (modifier) ->
-    # do something
+    # Player holding up
+    @hero.y -= @hero.speed * modifier if 38 of @keysDown
+    # Player holding down
+    @hero.y += @hero.speed * modifier if 40 of @keysDown
+    # Player holding left
+    @hero.x -= @hero.speed * modifier if 37 of @keysDown
+    # Player holding right
+    @hero.x += @hero.speed * modifier if 39 of @keysDown
 
   render: ->
     @hero.draw(@ctx)
@@ -48,6 +65,9 @@ class Game
     @then = now
 
   constructor: ->
+    @keysDown = {}
+
+  run: ->
     @setup()
     @reset()
     @then = Date.now()
