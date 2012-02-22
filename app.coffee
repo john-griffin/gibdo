@@ -50,13 +50,13 @@ class Game
 
   update: (modifier) ->
     # Player holding up
-    @hero.y -= @hero.speed * modifier if 38 of @keysDown
+    @hero.y -= @hero.speed * modifier if 38 of @keysDown and @hero.y > 0
     # Player holding down
-    @hero.y += @hero.speed * modifier if 40 of @keysDown
+    @hero.y += @hero.speed * modifier if 40 of @keysDown and @hero.y < 440
     # Player holding left
-    @hero.x -= @hero.speed * modifier if 37 of @keysDown
+    @hero.x -= @hero.speed * modifier if 37 of @keysDown and @hero.x > 0
     # Player holding right
-    @hero.x += @hero.speed * modifier if 39 of @keysDown
+    @hero.x += @hero.speed * modifier if 39 of @keysDown and @hero.x < 482
 
     @monster.x += @monster.speed * modifier if @monster.x < @hero.x
     @monster.x -= @monster.speed * modifier if @monster.x > @hero.x

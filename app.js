@@ -121,10 +121,18 @@
     };
 
     Game.prototype.update = function(modifier) {
-      if (38 in this.keysDown) this.hero.y -= this.hero.speed * modifier;
-      if (40 in this.keysDown) this.hero.y += this.hero.speed * modifier;
-      if (37 in this.keysDown) this.hero.x -= this.hero.speed * modifier;
-      if (39 in this.keysDown) this.hero.x += this.hero.speed * modifier;
+      if (38 in this.keysDown && this.hero.y > 0) {
+        this.hero.y -= this.hero.speed * modifier;
+      }
+      if (40 in this.keysDown && this.hero.y < 440) {
+        this.hero.y += this.hero.speed * modifier;
+      }
+      if (37 in this.keysDown && this.hero.x > 0) {
+        this.hero.x -= this.hero.speed * modifier;
+      }
+      if (39 in this.keysDown && this.hero.x < 482) {
+        this.hero.x += this.hero.speed * modifier;
+      }
       if (this.monster.x < this.hero.x) {
         this.monster.x += this.monster.speed * modifier;
       }
