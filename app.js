@@ -124,25 +124,25 @@
       if (38 in this.keysDown && this.hero.y > 0) {
         this.hero.y -= this.hero.speed * modifier;
       }
-      if (40 in this.keysDown && this.hero.y < 440) {
+      if (40 in this.keysDown && this.hero.y < 448) {
         this.hero.y += this.hero.speed * modifier;
       }
       if (37 in this.keysDown && this.hero.x > 0) {
         this.hero.x -= this.hero.speed * modifier;
       }
-      if (39 in this.keysDown && this.hero.x < 482) {
+      if (39 in this.keysDown && this.hero.x < 480) {
         this.hero.x += this.hero.speed * modifier;
       }
-      if (this.monster.x < this.hero.x) {
+      if (this.monster.x < this.hero.x - 32) {
         this.monster.x += this.monster.speed * modifier;
       }
-      if (this.monster.x > this.hero.x) {
+      if (this.monster.x > this.hero.x + 32) {
         this.monster.x -= this.monster.speed * modifier;
       }
-      if (this.monster.y < this.hero.y) {
+      if (this.monster.y < this.hero.y - 32) {
         this.monster.y += this.monster.speed * modifier;
       }
-      if (this.monster.y > this.hero.y) {
+      if (this.monster.y > this.hero.y + 32) {
         return this.monster.y -= this.monster.speed * modifier;
       }
     };

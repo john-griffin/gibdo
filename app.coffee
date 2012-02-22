@@ -52,16 +52,16 @@ class Game
     # Player holding up
     @hero.y -= @hero.speed * modifier if 38 of @keysDown and @hero.y > 0
     # Player holding down
-    @hero.y += @hero.speed * modifier if 40 of @keysDown and @hero.y < 440
+    @hero.y += @hero.speed * modifier if 40 of @keysDown and @hero.y < 448
     # Player holding left
     @hero.x -= @hero.speed * modifier if 37 of @keysDown and @hero.x > 0
     # Player holding right
-    @hero.x += @hero.speed * modifier if 39 of @keysDown and @hero.x < 482
+    @hero.x += @hero.speed * modifier if 39 of @keysDown and @hero.x < 480
 
-    @monster.x += @monster.speed * modifier if @monster.x < @hero.x
-    @monster.x -= @monster.speed * modifier if @monster.x > @hero.x
-    @monster.y += @monster.speed * modifier if @monster.y < @hero.y
-    @monster.y -= @monster.speed * modifier if @monster.y > @hero.y
+    @monster.x += @monster.speed * modifier if @monster.x < @hero.x - 32
+    @monster.x -= @monster.speed * modifier if @monster.x > @hero.x + 32
+    @monster.y += @monster.speed * modifier if @monster.y < @hero.y - 32
+    @monster.y -= @monster.speed * modifier if @monster.y > @hero.y + 32
 
   render: ->
     @background.draw(@ctx)
