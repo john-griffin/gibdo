@@ -19,6 +19,11 @@ class Sprite
 class Background extends Sprite
   imageUrl: "images/background.png"
 
+class Monster extends Sprite
+  imageUrl: "images/monster.png"
+  x: 30
+  y: 30
+
 class Hero extends Sprite
   speed: 256
   imageUrl: "images/hero.png"
@@ -34,6 +39,7 @@ class Game
     document.body.appendChild(@canvas)
     @hero = new Hero
     @background = new Background
+    @monster = new Monster
     $("body").keydown (e) => @keysDown[e.keyCode] = true
     $("body").keyup (e) => delete @keysDown[e.keyCode]
 
@@ -54,6 +60,7 @@ class Game
   render: ->
     @background.draw(@ctx)
     @hero.draw(@ctx)
+    @monster.draw(@ctx)
 
   main: =>
     now = Date.now()
