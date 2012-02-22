@@ -3,30 +3,25 @@ $ ->
   game = new Game
   game.run()
 
-class Hero
+class Sprite
   ready: false
+  x: 0
+  y: 0
+
+  constructor: ->
+    image = new Image
+    image.src = @imageUrl
+    image.onload = => @ready = true
+    @image = image
+
+  draw: (ctx) -> ctx.drawImage(@image, @x, @y) if @ready
+
+class Background extends Sprite
+  imageUrl: "images/background.png"
+
+class Hero extends Sprite
   speed: 256
-
-  constructor: ->
-    image = new Image
-    image.src = "images/hero.png"
-    image.onload = => @ready = true
-    @image = image
-
-  draw: (ctx) ->
-    ctx.drawImage(@image, @x, @y) if @ready
-
-class Background
-  ready: false
-
-  constructor: ->
-    image = new Image
-    image.src = "images/background.png"
-    image.onload = => @ready = true
-    @image = image
-
-  draw: (ctx) ->
-    ctx.drawImage(@image, 0, 0) if @ready
+  imageUrl: "images/hero.png"
 
 class Game
   keysDown: {}

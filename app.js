@@ -1,5 +1,7 @@
 (function() {
-  var $, Background, Game, Hero,
+  var $, Background, Game, Hero, Sprite,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   $ = jQuery;
@@ -10,53 +12,62 @@
     return game.run();
   });
 
-  Hero = (function() {
+  Sprite = (function() {
 
-    Hero.prototype.ready = false;
+    Sprite.prototype.ready = false;
 
-    Hero.prototype.speed = 256;
+    Sprite.prototype.x = 0;
 
-    function Hero() {
+    Sprite.prototype.y = 0;
+
+    function Sprite() {
       var image,
         _this = this;
       image = new Image;
-      image.src = "images/hero.png";
+      image.src = this.imageUrl;
       image.onload = function() {
         return _this.ready = true;
       };
       this.image = image;
     }
 
-    Hero.prototype.draw = function(ctx) {
+    Sprite.prototype.draw = function(ctx) {
       if (this.ready) return ctx.drawImage(this.image, this.x, this.y);
     };
 
-    return Hero;
+    return Sprite;
 
   })();
 
-  Background = (function() {
+  Background = (function(_super) {
 
-    Background.prototype.ready = false;
+    __extends(Background, _super);
 
     function Background() {
-      var image,
-        _this = this;
-      image = new Image;
-      image.src = "images/background.png";
-      image.onload = function() {
-        return _this.ready = true;
-      };
-      this.image = image;
+      Background.__super__.constructor.apply(this, arguments);
     }
 
-    Background.prototype.draw = function(ctx) {
-      if (this.ready) return ctx.drawImage(this.image, 0, 0);
-    };
+    Background.prototype.imageUrl = "images/background.png";
 
     return Background;
 
-  })();
+  })(Sprite);
+
+  Hero = (function(_super) {
+
+    __extends(Hero, _super);
+
+    function Hero() {
+      Hero.__super__.constructor.apply(this, arguments);
+    }
+
+    Hero.prototype.speed = 256;
+
+    Hero.prototype.imageUrl = "images/hero.png";
+
+    return Hero;
+
+  })(Sprite);
 
   Game = (function() {
 
