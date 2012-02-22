@@ -17,6 +17,8 @@ class Hero
     ctx.drawImage(@image, @x, @y) if @ready
 
 class Game
+  keysDown: {}
+
   setup: ->
     @canvas = document.createElement("canvas")
     @ctx = @canvas.getContext("2d")
@@ -53,9 +55,6 @@ class Game
     @update(delta / 1000)
     @render()
     @then = now
-
-  constructor: ->
-    @keysDown = {}
 
   run: ->
     @setup()

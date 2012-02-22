@@ -37,6 +37,12 @@
 
   Game = (function() {
 
+    function Game() {
+      this.main = __bind(this.main, this);
+    }
+
+    Game.prototype.keysDown = {};
+
     Game.prototype.setup = function() {
       var _this = this;
       this.canvas = document.createElement("canvas");
@@ -77,10 +83,6 @@
       this.render();
       return this.then = now;
     };
-
-    function Game() {
-      this.main = __bind(this.main, this);      this.keysDown = {};
-    }
 
     Game.prototype.run = function() {
       this.setup();
