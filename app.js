@@ -61,6 +61,8 @@
       Monster.__super__.constructor.apply(this, arguments);
     }
 
+    Monster.prototype.speed = 128;
+
     Monster.prototype.imageUrl = "images/monster.png";
 
     Monster.prototype.x = 30;
@@ -122,7 +124,19 @@
       if (38 in this.keysDown) this.hero.y -= this.hero.speed * modifier;
       if (40 in this.keysDown) this.hero.y += this.hero.speed * modifier;
       if (37 in this.keysDown) this.hero.x -= this.hero.speed * modifier;
-      if (39 in this.keysDown) return this.hero.x += this.hero.speed * modifier;
+      if (39 in this.keysDown) this.hero.x += this.hero.speed * modifier;
+      if (this.monster.x < this.hero.x) {
+        this.monster.x += this.monster.speed * modifier;
+      }
+      if (this.monster.x > this.hero.x) {
+        this.monster.x -= this.monster.speed * modifier;
+      }
+      if (this.monster.y < this.hero.y) {
+        this.monster.y += this.monster.speed * modifier;
+      }
+      if (this.monster.y > this.hero.y) {
+        return this.monster.y -= this.monster.speed * modifier;
+      }
     };
 
     Game.prototype.render = function() {

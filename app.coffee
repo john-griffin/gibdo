@@ -20,6 +20,7 @@ class Background extends Sprite
   imageUrl: "images/background.png"
 
 class Monster extends Sprite
+  speed: 128
   imageUrl: "images/monster.png"
   x: 30
   y: 30
@@ -56,6 +57,11 @@ class Game
     @hero.x -= @hero.speed * modifier if 37 of @keysDown
     # Player holding right
     @hero.x += @hero.speed * modifier if 39 of @keysDown
+
+    @monster.x += @monster.speed * modifier if @monster.x < @hero.x
+    @monster.x -= @monster.speed * modifier if @monster.x > @hero.x
+    @monster.y += @monster.speed * modifier if @monster.y < @hero.y
+    @monster.y -= @monster.speed * modifier if @monster.y > @hero.y
 
   render: ->
     @background.draw(@ctx)
