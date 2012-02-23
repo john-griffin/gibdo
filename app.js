@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Game, Hero, Monster, Sprite,
+  var $, Background, Game, Hero, Monster, Sprite, World,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -15,6 +15,22 @@
   Sprite = (function() {
 
     Sprite.prototype.ready = false;
+
+    Sprite.prototype.sx = 0;
+
+    Sprite.prototype.sy = 0;
+
+    Sprite.prototype.sw = 0;
+
+    Sprite.prototype.sh = 0;
+
+    Sprite.prototype.dx = 0;
+
+    Sprite.prototype.dy = 0;
+
+    Sprite.prototype.dw = 0;
+
+    Sprite.prototype.dh = 0;
 
     Sprite.prototype.x = 0;
 
@@ -32,10 +48,24 @@
     }
 
     Sprite.prototype.draw = function(ctx) {
-      if (this.ready) return ctx.drawImage(this.image, this.x, this.y);
+      if (this.ready) {
+        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
+      }
     };
 
     return Sprite;
+
+  })();
+
+  World = (function() {
+
+    function World() {}
+
+    World.prototype.width = 512;
+
+    World.prototype.height = 480;
+
+    return World;
 
   })();
 
@@ -47,7 +77,24 @@
       Background.__super__.constructor.apply(this, arguments);
     }
 
+    Background.prototype.sw = 100;
+
+    Background.prototype.sh = 100;
+
+    Background.prototype.dw = 100;
+
+    Background.prototype.dh = 100;
+
     Background.prototype.imageUrl = "images/background.png";
+
+    Background.prototype.draw = function(ctx, herox, heroy) {
+      var x, y;
+      x = herox - 34;
+      y = heroy - 34;
+      if (this.ready) {
+        return ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
+      }
+    };
 
     return Background;
 
@@ -65,9 +112,26 @@
 
     Monster.prototype.imageUrl = "images/monster.png";
 
-    Monster.prototype.x = 30;
+    Monster.prototype.x = 50;
 
-    Monster.prototype.y = 30;
+    Monster.prototype.y = 50;
+
+    Monster.prototype.sw = 30;
+
+    Monster.prototype.sh = 32;
+
+    Monster.prototype.dw = 30;
+
+    Monster.prototype.dh = 32;
+
+    Monster.prototype.draw = function(ctx, herox, heroy) {
+      var x, y;
+      x = this.x - herox + 30;
+      y = this.y - heroy + 32;
+      if (this.ready) {
+        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
+      }
+    };
 
     return Monster;
 
@@ -81,9 +145,23 @@
       Hero.__super__.constructor.apply(this, arguments);
     }
 
+    Hero.prototype.sw = 32;
+
+    Hero.prototype.sh = 32;
+
+    Hero.prototype.dw = 32;
+
+    Hero.prototype.dh = 32;
+
     Hero.prototype.speed = 256;
 
     Hero.prototype.imageUrl = "images/hero.png";
+
+    Hero.prototype.draw = function(ctx) {
+      if (this.ready) {
+        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, 34, 34, this.dw, this.dh);
+      }
+    };
 
     return Hero;
 
@@ -97,12 +175,17 @@
 
     Game.prototype.keysDown = {};
 
+    Game.prototype.offsetX = 0;
+
+    Game.prototype.offsetY = 0;
+
     Game.prototype.setup = function() {
       var _this = this;
+      this.world = new World;
       this.canvas = document.createElement("canvas");
       this.ctx = this.canvas.getContext("2d");
-      this.canvas.width = 512;
-      this.canvas.height = 480;
+      this.canvas.width = 100;
+      this.canvas.height = 100;
       document.body.appendChild(this.canvas);
       this.hero = new Hero;
       this.background = new Background;
@@ -116,41 +199,30 @@
     };
 
     Game.prototype.reset = function() {
-      this.hero.x = this.canvas.width / 2;
-      return this.hero.y = this.canvas.height / 2;
+      this.hero.x = (this.world.width / 2) - 16;
+      return this.hero.y = (this.world.height / 2) - 16;
     };
 
     Game.prototype.update = function(modifier) {
-      if (38 in this.keysDown && this.hero.y > 0) {
+      if (38 in this.keysDown && this.hero.y > 40) {
         this.hero.y -= this.hero.speed * modifier;
       }
-      if (40 in this.keysDown && this.hero.y < 448) {
+      if (40 in this.keysDown && this.hero.y < 400) {
         this.hero.y += this.hero.speed * modifier;
       }
-      if (37 in this.keysDown && this.hero.x > 0) {
+      if (37 in this.keysDown && this.hero.x > 40) {
         this.hero.x -= this.hero.speed * modifier;
       }
-      if (39 in this.keysDown && this.hero.x < 480) {
+      if (39 in this.keysDown && this.hero.x < 430) {
         this.hero.x += this.hero.speed * modifier;
       }
-      if (this.monster.x < this.hero.x - 32) {
-        this.monster.x += this.monster.speed * modifier;
-      }
-      if (this.monster.x > this.hero.x + 32) {
-        this.monster.x -= this.monster.speed * modifier;
-      }
-      if (this.monster.y < this.hero.y - 32) {
-        this.monster.y += this.monster.speed * modifier;
-      }
-      if (this.monster.y > this.hero.y + 32) {
-        return this.monster.y -= this.monster.speed * modifier;
-      }
+      return this.ctx.clearRect(0, 0, 100, 100);
     };
 
     Game.prototype.render = function() {
-      this.background.draw(this.ctx);
+      this.background.draw(this.ctx, this.hero.x, this.hero.y);
       this.hero.draw(this.ctx);
-      return this.monster.draw(this.ctx);
+      return this.monster.draw(this.ctx, this.hero.x, this.hero.y);
     };
 
     Game.prototype.main = function() {
