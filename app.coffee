@@ -39,6 +39,10 @@ class Background extends Sprite
   draw: (ctx, herox, heroy) -> 
     x = herox - 34
     y = heroy - 34
+    x = 0 if x <= 0
+    y = 0 if y <= 0
+    x = 512 - 100 if x >= 512 - 100
+    y = 480 - 100 if y >= 480 - 100
     ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Monster extends Sprite
@@ -67,7 +71,17 @@ class Hero extends Sprite
   speed: 256
   imageUrl: "images/hero.png"
 
-  draw: (ctx) -> ctx.drawImage(@image, @sx, @sy, @sw, @sh, 34, 34, @dw, @dh) if @ready
+  draw: (ctx) -> 
+    x = 32
+    y = 32
+    x = @x if @x < 32
+    y = @y if @y < 32
+
+    x = @x - 412 if @x > 444
+    y = @y - 380 if @y > 412
+
+    # console.log @x, @y 
+    ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 
 class Game
   keysDown: {}
@@ -92,14 +106,15 @@ class Game
     @hero.y = (@world.height / 2) - 16
 
   update: (modifier) ->
+    # console.log modifier
     # Player holding up
-    @hero.y -= @hero.speed * modifier if 38 of @keysDown and @hero.y > 40
+    @hero.y -= @hero.speed * modifier if 38 of @keysDown and @hero.y > 0
     # Player holding down
-    @hero.y += @hero.speed * modifier if 40 of @keysDown and @hero.y < 400
+    @hero.y += @hero.speed * modifier if 40 of @keysDown and @hero.y < @world.height - 32
     # Player holding left
-    @hero.x -= @hero.speed * modifier if 37 of @keysDown and @hero.x > 40
+    @hero.x -= @hero.speed * modifier if 37 of @keysDown and @hero.x > 0
     # Player holding right
-    @hero.x += @hero.speed * modifier if 39 of @keysDown and @hero.x < 430
+    @hero.x += @hero.speed * modifier if 39 of @keysDown and @hero.x < @world.width - 32
 
     @ctx.clearRect(0,0,100,100)
 

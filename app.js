@@ -91,6 +91,10 @@
       var x, y;
       x = herox - 34;
       y = heroy - 34;
+      if (x <= 0) x = 0;
+      if (y <= 0) y = 0;
+      if (x >= 512 - 100) x = 512 - 100;
+      if (y >= 480 - 100) y = 480 - 100;
       if (this.ready) {
         return ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
       }
@@ -158,8 +162,15 @@
     Hero.prototype.imageUrl = "images/hero.png";
 
     Hero.prototype.draw = function(ctx) {
+      var x, y;
+      x = 32;
+      y = 32;
+      if (this.x < 32) x = this.x;
+      if (this.y < 32) y = this.y;
+      if (this.x > 444) x = this.x - 412;
+      if (this.y > 412) y = this.y - 380;
       if (this.ready) {
-        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, 34, 34, this.dw, this.dh);
+        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
     };
 
@@ -204,16 +215,16 @@
     };
 
     Game.prototype.update = function(modifier) {
-      if (38 in this.keysDown && this.hero.y > 40) {
+      if (38 in this.keysDown && this.hero.y > 0) {
         this.hero.y -= this.hero.speed * modifier;
       }
-      if (40 in this.keysDown && this.hero.y < 400) {
+      if (40 in this.keysDown && this.hero.y < this.world.height - 32) {
         this.hero.y += this.hero.speed * modifier;
       }
-      if (37 in this.keysDown && this.hero.x > 40) {
+      if (37 in this.keysDown && this.hero.x > 0) {
         this.hero.x -= this.hero.speed * modifier;
       }
-      if (39 in this.keysDown && this.hero.x < 430) {
+      if (39 in this.keysDown && this.hero.x < this.world.width - 32) {
         this.hero.x += this.hero.speed * modifier;
       }
       return this.ctx.clearRect(0, 0, 100, 100);
