@@ -92,7 +92,7 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sprite = _ref[_i];
-        _results.push(sprite.draw(this.ctx, heroOffsetX, heroOffsetY, this.hero.x, this.hero.y));
+        _results.push(sprite.draw(this.ctx, heroOffsetX, heroOffsetY, this.viewWidth, this.viewHeight, this.width, this.height, this.hero.x, this.hero.y));
       }
       return _results;
     };
@@ -131,14 +131,16 @@
       Background.__super__.constructor.apply(this, arguments);
     }
 
-    Background.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, herox, heroy) {
+    Background.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) {
       var x, y;
       x = herox - heroOffsetX;
       y = heroy - heroOffsetY;
       if (herox < heroOffsetX) x = 0;
       if (heroy < heroOffsetY) y = 0;
-      if (herox > 446) x = 512 - 100;
-      if (heroy > 414) y = 480 - 100;
+      if (herox > gameWidth - viewWidth + heroOffsetX) x = gameWidth - viewWidth;
+      if (heroy > gameHeight - viewHeight + heroOffsetY) {
+        y = gameHeight - viewHeight;
+      }
       if (this.ready) {
         return ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
       }
@@ -156,13 +158,17 @@
       Entity.__super__.constructor.apply(this, arguments);
     }
 
-    Entity.prototype.drawOffset = function(ctx, heroOffsetX, heroOffsetY, x, y, offsetX, offsetY) {
+    Entity.prototype.drawOffset = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, offsetX, offsetY) {
       if (offsetX == null) offsetX = this.x;
       if (offsetY == null) offsetY = this.y;
       if (offsetX < heroOffsetX) x = this.x;
       if (offsetY < heroOffsetY) y = this.y;
-      if (offsetX > 446) x = this.x - 412;
-      if (offsetY > 414) y = this.y - 380;
+      if (offsetX > gameWidth - viewWidth + heroOffsetX) {
+        x = this.x - (gameWidth - viewWidth);
+      }
+      if (offsetY > gameHeight - viewHeight + heroOffsetY) {
+        y = this.y - (gameHeight - viewHeight);
+      }
       if (this.ready) {
         return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
@@ -196,11 +202,11 @@
 
     Monster.prototype.dh = 32;
 
-    Monster.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, herox, heroy) {
+    Monster.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) {
       var x, y;
       x = this.x - herox + heroOffsetX;
       y = this.y - heroy + heroOffsetY;
-      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, x, y, herox, heroy);
+      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, herox, heroy);
     };
 
     return Monster;
@@ -227,8 +233,8 @@
 
     Hero.prototype.imageUrl = "images/hero.png";
 
-    Hero.prototype.draw = function(ctx, heroOffsetX, heroOffsetY) {
-      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, heroOffsetX, heroOffsetY);
+    Hero.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight) {
+      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, heroOffsetX, heroOffsetY);
     };
 
     Hero.prototype.velocity = function(mod) {

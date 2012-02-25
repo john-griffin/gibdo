@@ -48,7 +48,7 @@ class World
   render: -> 
     heroOffsetX = @hero.viewOffsetX(@viewWidth)
     heroOffsetY = @hero.viewOffsetY(@viewHeight)
-    sprite.draw(@ctx, heroOffsetX, heroOffsetY, @hero.x, @hero.y) for sprite in @sprites
+    sprite.draw(@ctx, heroOffsetX, heroOffsetY, @viewWidth, @viewHeight, @width, @height, @hero.x, @hero.y) for sprite in @sprites
 
   up:    (mod) -> @hero.up(mod)
   down:  (mod) -> @hero.down(mod, @height)
@@ -64,22 +64,21 @@ class Background extends Sprite
     @sh = @dh
     super
 
-  draw: (ctx, heroOffsetX, heroOffsetY, herox, heroy) -> 
+  draw: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) -> 
     x = herox - heroOffsetX
     y = heroy - heroOffsetY
     x = 0 if herox < heroOffsetX
     y = 0 if heroy < heroOffsetY
-    x = 512 - 100 if herox > 446
-    y = 480 - 100 if heroy > 414
+    x = gameWidth - viewWidth if herox > gameWidth - viewWidth + heroOffsetX
+    y = gameHeight - viewHeight if heroy > gameHeight - viewHeight + heroOffsetY
     ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Entity extends Sprite
-  drawOffset: (ctx, heroOffsetX, heroOffsetY, x, y, offsetX = @x, offsetY = @y) ->
+  drawOffset: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, offsetX = @x, offsetY = @y) ->
     x = @x if offsetX < heroOffsetX
     y = @y if offsetY < heroOffsetY
-
-    x = @x - 412 if offsetX > 446
-    y = @y - 380 if offsetY > 414
+    x = @x - (gameWidth - viewWidth) if offsetX > gameWidth - viewWidth + heroOffsetX
+    y = @y - (gameHeight - viewHeight) if offsetY > gameHeight - viewHeight + heroOffsetY
 
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 
@@ -95,10 +94,10 @@ class Monster extends Entity
   dw: 30
   dh: 32
 
-  draw: (ctx, heroOffsetX, heroOffsetY, herox, heroy) -> 
+  draw: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) -> 
     x = @x - herox + heroOffsetX
     y = @y - heroy + heroOffsetY
-    @drawOffset(ctx, heroOffsetX, heroOffsetY, x, y, herox, heroy)
+    @drawOffset(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, herox, heroy)
 
 class Hero extends Entity
   # 32 x 32
@@ -109,7 +108,8 @@ class Hero extends Entity
   speed: 256
   imageUrl: "images/hero.png"
 
-  draw: (ctx, heroOffsetX, heroOffsetY) -> @drawOffset(ctx, heroOffsetX, heroOffsetY, heroOffsetX, heroOffsetY)
+  draw: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight) -> 
+    @drawOffset(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, heroOffsetX, heroOffsetY)
 
   velocity: (mod) -> @speed * mod
 
