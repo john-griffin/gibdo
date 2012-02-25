@@ -63,12 +63,16 @@
 
     World.prototype.height = 480;
 
+    World.prototype.viewWidth = 100;
+
+    World.prototype.viewHeight = 100;
+
     World.prototype.sprites = [];
 
     function World() {
       this.ctx = this.createCanvas();
       this.hero = new Hero;
-      this.sprites.push(new Background);
+      this.sprites.push(new Background(this.viewWidth, this.viewHeight));
       this.sprites.push(new Monster);
       this.sprites.push(this.hero);
     }
@@ -76,8 +80,8 @@
     World.prototype.createCanvas = function() {
       var canvas;
       canvas = document.createElement("canvas");
-      canvas.width = 100;
-      canvas.height = 100;
+      canvas.width = this.viewWidth;
+      canvas.height = this.viewHeight;
       document.body.appendChild(canvas);
       return canvas.getContext("2d");
     };
@@ -121,19 +125,15 @@
 
     __extends(Background, _super);
 
-    function Background() {
+    Background.prototype.imageUrl = "images/background.png";
+
+    function Background(dw, dh) {
+      this.dw = dw;
+      this.dh = dh;
+      this.sw = this.dw;
+      this.sh = this.dh;
       Background.__super__.constructor.apply(this, arguments);
     }
-
-    Background.prototype.sw = 100;
-
-    Background.prototype.sh = 100;
-
-    Background.prototype.dw = 100;
-
-    Background.prototype.dh = 100;
-
-    Background.prototype.imageUrl = "images/background.png";
 
     Background.prototype.draw = function(ctx, herox, heroy) {
       var x, y;

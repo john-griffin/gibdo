@@ -27,19 +27,21 @@ class Sprite
 class World
   width: 512
   height: 480
+  viewWidth: 100
+  viewHeight: 100
   sprites: []
 
   constructor: ->
     @ctx = @createCanvas()
     @hero = new Hero
-    @sprites.push(new Background)
+    @sprites.push(new Background(@viewWidth, @viewHeight))
     @sprites.push(new Monster)
     @sprites.push(@hero)
 
   createCanvas: ->
     canvas = document.createElement("canvas")
-    canvas.width = 100
-    canvas.height = 100
+    canvas.width = @viewWidth
+    canvas.height = @viewHeight
     document.body.appendChild(canvas)
     canvas.getContext("2d")
 
@@ -54,11 +56,12 @@ class World
 
 class Background extends Sprite
   # 512x480
-  sw: 100
-  sh: 100
-  dw: 100
-  dh: 100
   imageUrl: "images/background.png"
+
+  constructor: (@dw, @dh) ->
+    @sw = @dw
+    @sh = @dh
+    super
 
   draw: (ctx, herox, heroy) -> 
     x = herox - 34
