@@ -28,6 +28,28 @@ class World
   width: 512
   height: 480
 
+  constructor: ->
+    @ctx = @createCanvas()
+    @hero = new Hero
+    @background = new Background
+    @monster = new Monster
+
+  createCanvas: ->
+    canvas = document.createElement("canvas")
+    canvas.width = 100
+    canvas.height = 100
+    document.body.appendChild(canvas)
+    canvas.getContext("2d")
+
+  reset: ->
+    @hero.x = (@width / 2) - 16
+    @hero.y = (@height / 2) - 16
+
+  render: ->
+    @background.draw(@ctx, @hero.x, @hero.y)
+    @hero.draw(@ctx)
+    @monster.draw(@ctx, @hero.x, @hero.y)
+
 class Background extends Sprite
   # 512x480
   sw: 100
@@ -84,44 +106,36 @@ class Hero extends Entitiy
   draw: (ctx) -> 
     @drawOffset(ctx, 34, 34)
 
-class Game
+class InputHandler
   keysDown: {}
 
-  setup: ->
-    @world = new World
-    @canvas = document.createElement("canvas")
-    @ctx = @canvas.getContext("2d")
-    @canvas.width = 100
-    @canvas.height = 100
-    document.body.appendChild(@canvas)
-    @hero = new Hero
-    @background = new Background
-    @monster = new Monster
+  constructor: (@world) ->
     $("body").keydown (e) => @keysDown[e.keyCode] = true
     $("body").keyup (e) => delete @keysDown[e.keyCode]
 
-  reset: ->
-    @hero.x = (@world.width / 2) - 16
-    @hero.y = (@world.height / 2) - 16
-
   update: (modifier) ->
+    hero = @world.hero
     # console.log modifier
-    velocity = @hero.speed * modifier
+    velocity = hero.speed * modifier
     # Player holding up
-    @hero.y -= velocity if 38 of @keysDown and @hero.y - velocity > 0
+    hero.y -= velocity if 38 of @keysDown and hero.y - velocity > 0
     # Player holding down
-    @hero.y += velocity if 40 of @keysDown and @hero.y + velocity < @world.height - 32
+    hero.y += velocity if 40 of @keysDown and hero.y + velocity < @world.height - 32
     # Player holding left
-    @hero.x -= velocity if 37 of @keysDown and @hero.x - velocity > 0
+    hero.x -= velocity if 37 of @keysDown and hero.x - velocity > 0
     # Player holding right
-    @hero.x += velocity if 39 of @keysDown and @hero.x + velocity < @world.width - 32
+    hero.x += velocity if 39 of @keysDown and hero.x + velocity < @world.width - 32
 
-    @ctx.clearRect(0,0,100,100)
+class Game
+  setup: ->
+    @world = new World
+    @inputHandler = new InputHandler(@world)
 
-  render: ->
-    @background.draw(@ctx, @hero.x, @hero.y)
-    @hero.draw(@ctx)
-    @monster.draw(@ctx, @hero.x, @hero.y)
+  reset: -> @world.reset()
+
+  update: (modifier) -> @inputHandler.update(modifier)
+
+  render: -> @world.render()
 
   main: =>
     now = Date.now()

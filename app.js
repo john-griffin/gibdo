@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Entitiy, Game, Hero, Monster, Sprite, World,
+  var $, Background, Entitiy, Game, Hero, InputHandler, Monster, Sprite, World,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -59,11 +59,36 @@
 
   World = (function() {
 
-    function World() {}
-
     World.prototype.width = 512;
 
     World.prototype.height = 480;
+
+    function World() {
+      this.ctx = this.createCanvas();
+      this.hero = new Hero;
+      this.background = new Background;
+      this.monster = new Monster;
+    }
+
+    World.prototype.createCanvas = function() {
+      var canvas;
+      canvas = document.createElement("canvas");
+      canvas.width = 100;
+      canvas.height = 100;
+      document.body.appendChild(canvas);
+      return canvas.getContext("2d");
+    };
+
+    World.prototype.reset = function() {
+      this.hero.x = (this.width / 2) - 16;
+      return this.hero.y = (this.height / 2) - 16;
+    };
+
+    World.prototype.render = function() {
+      this.background.draw(this.ctx, this.hero.x, this.hero.y);
+      this.hero.draw(this.ctx);
+      return this.monster.draw(this.ctx, this.hero.x, this.hero.y);
+    };
 
     return World;
 
@@ -191,60 +216,60 @@
 
   })(Entitiy);
 
+  InputHandler = (function() {
+
+    InputHandler.prototype.keysDown = {};
+
+    function InputHandler(world) {
+      var _this = this;
+      this.world = world;
+      $("body").keydown(function(e) {
+        return _this.keysDown[e.keyCode] = true;
+      });
+      $("body").keyup(function(e) {
+        return delete _this.keysDown[e.keyCode];
+      });
+    }
+
+    InputHandler.prototype.update = function(modifier) {
+      var hero, velocity;
+      hero = this.world.hero;
+      velocity = hero.speed * modifier;
+      if (38 in this.keysDown && hero.y - velocity > 0) hero.y -= velocity;
+      if (40 in this.keysDown && hero.y + velocity < this.world.height - 32) {
+        hero.y += velocity;
+      }
+      if (37 in this.keysDown && hero.x - velocity > 0) hero.x -= velocity;
+      if (39 in this.keysDown && hero.x + velocity < this.world.width - 32) {
+        return hero.x += velocity;
+      }
+    };
+
+    return InputHandler;
+
+  })();
+
   Game = (function() {
 
     function Game() {
       this.main = __bind(this.main, this);
     }
 
-    Game.prototype.keysDown = {};
-
     Game.prototype.setup = function() {
-      var _this = this;
       this.world = new World;
-      this.canvas = document.createElement("canvas");
-      this.ctx = this.canvas.getContext("2d");
-      this.canvas.width = 100;
-      this.canvas.height = 100;
-      document.body.appendChild(this.canvas);
-      this.hero = new Hero;
-      this.background = new Background;
-      this.monster = new Monster;
-      $("body").keydown(function(e) {
-        return _this.keysDown[e.keyCode] = true;
-      });
-      return $("body").keyup(function(e) {
-        return delete _this.keysDown[e.keyCode];
-      });
+      return this.inputHandler = new InputHandler(this.world);
     };
 
     Game.prototype.reset = function() {
-      this.hero.x = (this.world.width / 2) - 16;
-      return this.hero.y = (this.world.height / 2) - 16;
+      return this.world.reset();
     };
 
     Game.prototype.update = function(modifier) {
-      var velocity;
-      velocity = this.hero.speed * modifier;
-      if (38 in this.keysDown && this.hero.y - velocity > 0) {
-        this.hero.y -= velocity;
-      }
-      if (40 in this.keysDown && this.hero.y + velocity < this.world.height - 32) {
-        this.hero.y += velocity;
-      }
-      if (37 in this.keysDown && this.hero.x - velocity > 0) {
-        this.hero.x -= velocity;
-      }
-      if (39 in this.keysDown && this.hero.x + velocity < this.world.width - 32) {
-        this.hero.x += velocity;
-      }
-      return this.ctx.clearRect(0, 0, 100, 100);
+      return this.inputHandler.update(modifier);
     };
 
     Game.prototype.render = function() {
-      this.background.draw(this.ctx, this.hero.x, this.hero.y);
-      this.hero.draw(this.ctx);
-      return this.monster.draw(this.ctx, this.hero.x, this.hero.y);
+      return this.world.render();
     };
 
     Game.prototype.main = function() {
