@@ -39,10 +39,10 @@ class Background extends Sprite
   draw: (ctx, herox, heroy) -> 
     x = herox - 34
     y = heroy - 34
-    x = 0 if x <= 0
-    y = 0 if y <= 0
-    x = 512 - 100 if x >= 512 - 100
-    y = 480 - 100 if y >= 480 - 100
+    x = 0 if herox < 34
+    y = 0 if heroy < 34
+    x = 512 - 100 if herox > 446
+    y = 480 - 100 if heroy > 414
     ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Monster extends Sprite
@@ -63,8 +63,8 @@ class Monster extends Sprite
     x = @x if herox < 34
     y = @y if heroy < 34
 
-    x = @x - 412 if herox >= 446
-    y = @y - 380 if heroy >= 414
+    x = @x - 412 if herox > 446
+    y = @y - 380 if heroy > 414
 
     # console.log herox - 34, heroy - 34
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready

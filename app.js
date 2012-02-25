@@ -91,10 +91,10 @@
       var x, y;
       x = herox - 34;
       y = heroy - 34;
-      if (x <= 0) x = 0;
-      if (y <= 0) y = 0;
-      if (x >= 512 - 100) x = 512 - 100;
-      if (y >= 480 - 100) y = 480 - 100;
+      if (herox < 34) x = 0;
+      if (heroy < 34) y = 0;
+      if (herox > 446) x = 512 - 100;
+      if (heroy > 414) y = 480 - 100;
       if (this.ready) {
         return ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
       }
@@ -134,8 +134,8 @@
       y = this.y - heroy + 34;
       if (herox < 34) x = this.x;
       if (heroy < 34) y = this.y;
-      if (herox >= 446) x = this.x - 412;
-      if (heroy >= 414) y = this.y - 380;
+      if (herox > 446) x = this.x - 412;
+      if (heroy > 414) y = this.y - 380;
       if (this.ready) {
         return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
