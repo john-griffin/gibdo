@@ -108,13 +108,14 @@ class Game
   update: (modifier) ->
     # console.log modifier
     # Player holding up
-    @hero.y -= @hero.speed * modifier if 38 of @keysDown and @hero.y > 0
+    velocity = @hero.speed * modifier
+    @hero.y -= velocity if 38 of @keysDown and @hero.y - velocity > 0
     # Player holding down
-    @hero.y += @hero.speed * modifier if 40 of @keysDown and @hero.y < @world.height - 32
+    @hero.y += velocity if 40 of @keysDown and @hero.y + velocity < @world.height - 32
     # Player holding left
-    @hero.x -= @hero.speed * modifier if 37 of @keysDown and @hero.x > 0
+    @hero.x -= velocity if 37 of @keysDown and @hero.x - velocity > 0
     # Player holding right
-    @hero.x += @hero.speed * modifier if 39 of @keysDown and @hero.x < @world.width - 32
+    @hero.x += velocity if 39 of @keysDown and @hero.x + velocity < @world.width - 32
 
     @ctx.clearRect(0,0,100,100)
 

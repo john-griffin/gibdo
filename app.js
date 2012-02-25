@@ -215,17 +215,19 @@
     };
 
     Game.prototype.update = function(modifier) {
-      if (38 in this.keysDown && this.hero.y > 0) {
-        this.hero.y -= this.hero.speed * modifier;
+      var velocity;
+      velocity = this.hero.speed * modifier;
+      if (38 in this.keysDown && this.hero.y - velocity > 0) {
+        this.hero.y -= velocity;
       }
-      if (40 in this.keysDown && this.hero.y < this.world.height - 32) {
-        this.hero.y += this.hero.speed * modifier;
+      if (40 in this.keysDown && this.hero.y + velocity < this.world.height - 32) {
+        this.hero.y += velocity;
       }
-      if (37 in this.keysDown && this.hero.x > 0) {
-        this.hero.x -= this.hero.speed * modifier;
+      if (37 in this.keysDown && this.hero.x - velocity > 0) {
+        this.hero.x -= velocity;
       }
-      if (39 in this.keysDown && this.hero.x < this.world.width - 32) {
-        this.hero.x += this.hero.speed * modifier;
+      if (39 in this.keysDown && this.hero.x + velocity < this.world.width - 32) {
+        this.hero.x += velocity;
       }
       return this.ctx.clearRect(0, 0, 100, 100);
     };
