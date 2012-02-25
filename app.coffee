@@ -27,12 +27,14 @@ class Sprite
 class World
   width: 512
   height: 480
+  sprites: []
 
   constructor: ->
     @ctx = @createCanvas()
     @hero = new Hero
-    @background = new Background
-    @monster = new Monster
+    @sprites.push(new Background)
+    @sprites.push(new Monster)
+    @sprites.push(@hero)
 
   createCanvas: ->
     canvas = document.createElement("canvas")
@@ -45,10 +47,7 @@ class World
     @hero.x = (@width / 2) - 16
     @hero.y = (@height / 2) - 16
 
-  render: ->
-    @background.draw(@ctx, @hero.x, @hero.y)
-    @hero.draw(@ctx)
-    @monster.draw(@ctx, @hero.x, @hero.y)
+  render: -> sprite.draw(@ctx, @hero.x, @hero.y) for sprite in @sprites
 
   up:    (mod) -> @hero.up(mod)
   down:  (mod) -> @hero.down(mod, @height)

@@ -63,11 +63,14 @@
 
     World.prototype.height = 480;
 
+    World.prototype.sprites = [];
+
     function World() {
       this.ctx = this.createCanvas();
       this.hero = new Hero;
-      this.background = new Background;
-      this.monster = new Monster;
+      this.sprites.push(new Background);
+      this.sprites.push(new Monster);
+      this.sprites.push(this.hero);
     }
 
     World.prototype.createCanvas = function() {
@@ -85,9 +88,14 @@
     };
 
     World.prototype.render = function() {
-      this.background.draw(this.ctx, this.hero.x, this.hero.y);
-      this.hero.draw(this.ctx);
-      return this.monster.draw(this.ctx, this.hero.x, this.hero.y);
+      var sprite, _i, _len, _ref, _results;
+      _ref = this.sprites;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        sprite = _ref[_i];
+        _results.push(sprite.draw(this.ctx, this.hero.x, this.hero.y));
+      }
+      return _results;
     };
 
     World.prototype.up = function(mod) {
