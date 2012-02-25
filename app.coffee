@@ -45,7 +45,10 @@ class World
 
   reset: -> @hero.reset(@width, @height)
 
-  render: -> sprite.draw(@ctx, @hero.x, @hero.y) for sprite in @sprites
+  render: -> 
+    heroOffsetX = @hero.viewOffsetX(@viewWidth)
+    heroOffsetY = @hero.viewOffsetY(@viewHeight)
+    sprite.draw(@ctx, heroOffsetX, heroOffsetY, @hero.x, @hero.y) for sprite in @sprites
 
   up:    (mod) -> @hero.up(mod)
   down:  (mod) -> @hero.down(mod, @height)
@@ -61,19 +64,19 @@ class Background extends Sprite
     @sh = @dh
     super
 
-  draw: (ctx, herox, heroy) -> 
-    x = herox - 34
-    y = heroy - 34
-    x = 0 if herox < 34
-    y = 0 if heroy < 34
+  draw: (ctx, heroOffsetX, heroOffsetY, herox, heroy) -> 
+    x = herox - heroOffsetX
+    y = heroy - heroOffsetY
+    x = 0 if herox < heroOffsetX
+    y = 0 if heroy < heroOffsetY
     x = 512 - 100 if herox > 446
     y = 480 - 100 if heroy > 414
     ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Entity extends Sprite
-  drawOffset: (ctx, x, y, offsetX = @x, offsetY = @y) ->
-    x = @x if offsetX < 34
-    y = @y if offsetY < 34
+  drawOffset: (ctx, heroOffsetX, heroOffsetY, x, y, offsetX = @x, offsetY = @y) ->
+    x = @x if offsetX < heroOffsetX
+    y = @y if offsetY < heroOffsetY
 
     x = @x - 412 if offsetX > 446
     y = @y - 380 if offsetY > 414
@@ -92,10 +95,10 @@ class Monster extends Entity
   dw: 30
   dh: 32
 
-  draw: (ctx, herox, heroy) -> 
-    x = @x - herox + 34
-    y = @y - heroy + 34
-    @drawOffset(ctx, x, y, herox, heroy)
+  draw: (ctx, heroOffsetX, heroOffsetY, herox, heroy) -> 
+    x = @x - herox + heroOffsetX
+    y = @y - heroy + heroOffsetY
+    @drawOffset(ctx, heroOffsetX, heroOffsetY, x, y, herox, heroy)
 
 class Hero extends Entity
   # 32 x 32
@@ -106,7 +109,7 @@ class Hero extends Entity
   speed: 256
   imageUrl: "images/hero.png"
 
-  draw: (ctx) -> @drawOffset(ctx, 34, 34)
+  draw: (ctx, heroOffsetX, heroOffsetY) -> @drawOffset(ctx, heroOffsetX, heroOffsetY, heroOffsetX, heroOffsetY)
 
   velocity: (mod) -> @speed * mod
 

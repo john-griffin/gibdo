@@ -85,12 +85,14 @@
     };
 
     World.prototype.render = function() {
-      var sprite, _i, _len, _ref, _results;
+      var heroOffsetX, heroOffsetY, sprite, _i, _len, _ref, _results;
+      heroOffsetX = this.hero.viewOffsetX(this.viewWidth);
+      heroOffsetY = this.hero.viewOffsetY(this.viewHeight);
       _ref = this.sprites;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sprite = _ref[_i];
-        _results.push(sprite.draw(this.ctx, this.hero.x, this.hero.y));
+        _results.push(sprite.draw(this.ctx, heroOffsetX, heroOffsetY, this.hero.x, this.hero.y));
       }
       return _results;
     };
@@ -129,12 +131,12 @@
       Background.__super__.constructor.apply(this, arguments);
     }
 
-    Background.prototype.draw = function(ctx, herox, heroy) {
+    Background.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, herox, heroy) {
       var x, y;
-      x = herox - 34;
-      y = heroy - 34;
-      if (herox < 34) x = 0;
-      if (heroy < 34) y = 0;
+      x = herox - heroOffsetX;
+      y = heroy - heroOffsetY;
+      if (herox < heroOffsetX) x = 0;
+      if (heroy < heroOffsetY) y = 0;
       if (herox > 446) x = 512 - 100;
       if (heroy > 414) y = 480 - 100;
       if (this.ready) {
@@ -154,11 +156,11 @@
       Entity.__super__.constructor.apply(this, arguments);
     }
 
-    Entity.prototype.drawOffset = function(ctx, x, y, offsetX, offsetY) {
+    Entity.prototype.drawOffset = function(ctx, heroOffsetX, heroOffsetY, x, y, offsetX, offsetY) {
       if (offsetX == null) offsetX = this.x;
       if (offsetY == null) offsetY = this.y;
-      if (offsetX < 34) x = this.x;
-      if (offsetY < 34) y = this.y;
+      if (offsetX < heroOffsetX) x = this.x;
+      if (offsetY < heroOffsetY) y = this.y;
       if (offsetX > 446) x = this.x - 412;
       if (offsetY > 414) y = this.y - 380;
       if (this.ready) {
@@ -194,11 +196,11 @@
 
     Monster.prototype.dh = 32;
 
-    Monster.prototype.draw = function(ctx, herox, heroy) {
+    Monster.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, herox, heroy) {
       var x, y;
-      x = this.x - herox + 34;
-      y = this.y - heroy + 34;
-      return this.drawOffset(ctx, x, y, herox, heroy);
+      x = this.x - herox + heroOffsetX;
+      y = this.y - heroy + heroOffsetY;
+      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, x, y, herox, heroy);
     };
 
     return Monster;
@@ -225,8 +227,8 @@
 
     Hero.prototype.imageUrl = "images/hero.png";
 
-    Hero.prototype.draw = function(ctx) {
-      return this.drawOffset(ctx, 34, 34);
+    Hero.prototype.draw = function(ctx, heroOffsetX, heroOffsetY) {
+      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, heroOffsetX, heroOffsetY);
     };
 
     Hero.prototype.velocity = function(mod) {
