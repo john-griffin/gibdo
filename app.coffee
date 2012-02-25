@@ -86,8 +86,6 @@ class Hero extends Entitiy
 
 class Game
   keysDown: {}
-  offsetX: 0
-  offsetY: 0
 
   setup: ->
     @world = new World
@@ -108,8 +106,8 @@ class Game
 
   update: (modifier) ->
     # console.log modifier
-    # Player holding up
     velocity = @hero.speed * modifier
+    # Player holding up
     @hero.y -= velocity if 38 of @keysDown and @hero.y - velocity > 0
     # Player holding down
     @hero.y += velocity if 40 of @keysDown and @hero.y + velocity < @world.height - 32

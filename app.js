@@ -199,10 +199,6 @@
 
     Game.prototype.keysDown = {};
 
-    Game.prototype.offsetX = 0;
-
-    Game.prototype.offsetY = 0;
-
     Game.prototype.setup = function() {
       var _this = this;
       this.world = new World;
