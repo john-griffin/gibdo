@@ -130,8 +130,10 @@
 
     Monster.prototype.draw = function(ctx, herox, heroy) {
       var x, y;
-      x = this.x - herox + 30;
-      y = this.y - heroy + 32;
+      x = this.x - herox + 34;
+      y = this.y - heroy + 34;
+      if (herox - 34 <= 0) x = this.x;
+      if (heroy - 34 <= 0) y = this.y;
       if (this.ready) {
         return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }

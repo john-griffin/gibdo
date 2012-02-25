@@ -57,8 +57,12 @@ class Monster extends Sprite
   dh: 32
 
   draw: (ctx, herox, heroy) -> 
-    x = @x - herox + 30
-    y = @y - heroy + 32
+    x = @x - herox + 34
+    y = @y - heroy + 34
+
+    x = @x if herox - 34 <= 0
+    y = @y if heroy - 34 <= 0
+
     # console.log x, y
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 
