@@ -12,45 +12,6 @@
     return game.run();
   });
 
-  Sprite = (function() {
-
-    Sprite.prototype.ready = false;
-
-    Sprite.prototype.sx = 0;
-
-    Sprite.prototype.sy = 0;
-
-    Sprite.prototype.sw = 0;
-
-    Sprite.prototype.sh = 0;
-
-    Sprite.prototype.dx = 0;
-
-    Sprite.prototype.dy = 0;
-
-    Sprite.prototype.dw = 0;
-
-    Sprite.prototype.dh = 0;
-
-    Sprite.prototype.x = 0;
-
-    Sprite.prototype.y = 0;
-
-    function Sprite() {
-      var image,
-        _this = this;
-      image = new Image;
-      image.src = this.imageUrl;
-      image.onload = function() {
-        return _this.ready = true;
-      };
-      this.image = image;
-    }
-
-    return Sprite;
-
-  })();
-
   World = (function() {
 
     World.prototype.width = 512;
@@ -65,9 +26,9 @@
 
     function World() {
       this.ctx = this.createCanvas();
-      this.hero = new Hero;
-      this.sprites.push(new Background(this.viewWidth, this.viewHeight));
-      this.sprites.push(new Monster);
+      this.hero = new Hero(this);
+      this.sprites.push(new Background(this));
+      this.sprites.push(new Monster(this));
       this.sprites.push(this.hero);
     }
 
@@ -117,18 +78,58 @@
 
   })();
 
+  Sprite = (function() {
+
+    Sprite.prototype.ready = false;
+
+    Sprite.prototype.sx = 0;
+
+    Sprite.prototype.sy = 0;
+
+    Sprite.prototype.sw = 0;
+
+    Sprite.prototype.sh = 0;
+
+    Sprite.prototype.dx = 0;
+
+    Sprite.prototype.dy = 0;
+
+    Sprite.prototype.dw = 0;
+
+    Sprite.prototype.dh = 0;
+
+    Sprite.prototype.x = 0;
+
+    Sprite.prototype.y = 0;
+
+    function Sprite(world) {
+      var image,
+        _this = this;
+      this.world = world;
+      image = new Image;
+      image.src = this.imageUrl;
+      image.onload = function() {
+        return _this.ready = true;
+      };
+      this.image = image;
+    }
+
+    return Sprite;
+
+  })();
+
   Background = (function(_super) {
 
     __extends(Background, _super);
 
     Background.prototype.imageUrl = "images/background.png";
 
-    function Background(dw, dh) {
-      this.dw = dw;
-      this.dh = dh;
-      this.sw = this.dw;
-      this.sh = this.dh;
-      Background.__super__.constructor.apply(this, arguments);
+    function Background(world) {
+      this.dw = world.viewWidth;
+      this.dh = world.viewHeight;
+      this.sw = world.viewWidth;
+      this.sh = world.viewHeight;
+      Background.__super__.constructor.call(this, world);
     }
 
     Background.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) {

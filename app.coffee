@@ -3,25 +3,6 @@ $ ->
   game = new Game
   game.run()
 
-class Sprite
-  ready: false
-  sx: 0
-  sy: 0
-  sw: 0
-  sh: 0
-  dx: 0
-  dy: 0
-  dw: 0
-  dh: 0
-  x: 0
-  y: 0
-
-  constructor: ->
-    image = new Image
-    image.src = @imageUrl
-    image.onload = => @ready = true
-    @image = image
-
 class World
   width: 512
   height: 480
@@ -31,9 +12,9 @@ class World
 
   constructor: ->
     @ctx = @createCanvas()
-    @hero = new Hero
-    @sprites.push(new Background(@viewWidth, @viewHeight))
-    @sprites.push(new Monster)
+    @hero = new Hero(this)
+    @sprites.push(new Background(this))
+    @sprites.push(new Monster(this))
     @sprites.push(@hero)
 
   createCanvas: ->
@@ -55,14 +36,35 @@ class World
   left:  (mod) -> @hero.left(mod)
   right: (mod) -> @hero.right(mod, @width)
 
+class Sprite
+  ready: false
+  sx: 0
+  sy: 0
+  sw: 0
+  sh: 0
+  dx: 0
+  dy: 0
+  dw: 0
+  dh: 0
+  x: 0
+  y: 0
+
+  constructor: (@world) ->
+    image = new Image
+    image.src = @imageUrl
+    image.onload = => @ready = true
+    @image = image
+
 class Background extends Sprite
   # 512x480
   imageUrl: "images/background.png"
 
-  constructor: (@dw, @dh) ->
-    @sw = @dw
-    @sh = @dh
-    super
+  constructor: (world) ->
+    @dw = world.viewWidth
+    @dh = world.viewHeight
+    @sw = world.viewWidth
+    @sh = world.viewHeight
+    super(world)
 
   draw: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) -> 
     x = herox - heroOffsetX
