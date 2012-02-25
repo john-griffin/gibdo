@@ -72,7 +72,7 @@ class Background extends Sprite
     y = 480 - 100 if heroy > 414
     ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
-class Entitiy extends Sprite
+class Entity extends Sprite
   drawOffset: (ctx, x, y, offsetX = @x, offsetY = @y) ->
     x = @x if offsetX < 34
     y = @y if offsetY < 34
@@ -83,7 +83,7 @@ class Entitiy extends Sprite
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 
 
-class Monster extends Entitiy
+class Monster extends Entity
   # 30 x 32
   speed: 128
   imageUrl: "images/monster.png"
@@ -99,7 +99,7 @@ class Monster extends Entitiy
     y = @y - heroy + 34
     @drawOffset(ctx, x, y, herox, heroy)
 
-class Hero extends Entitiy
+class Hero extends Entity
   # 32 x 32
   sw: 32
   sh: 32

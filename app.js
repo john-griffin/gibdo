@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Entitiy, Game, Hero, InputHandler, Monster, Sprite, World,
+  var $, Background, Entity, Game, Hero, InputHandler, Monster, Sprite, World,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -152,15 +152,15 @@
 
   })(Sprite);
 
-  Entitiy = (function(_super) {
+  Entity = (function(_super) {
 
-    __extends(Entitiy, _super);
+    __extends(Entity, _super);
 
-    function Entitiy() {
-      Entitiy.__super__.constructor.apply(this, arguments);
+    function Entity() {
+      Entity.__super__.constructor.apply(this, arguments);
     }
 
-    Entitiy.prototype.drawOffset = function(ctx, x, y, offsetX, offsetY) {
+    Entity.prototype.drawOffset = function(ctx, x, y, offsetX, offsetY) {
       if (offsetX == null) offsetX = this.x;
       if (offsetY == null) offsetY = this.y;
       if (offsetX < 34) x = this.x;
@@ -172,7 +172,7 @@
       }
     };
 
-    return Entitiy;
+    return Entity;
 
   })(Sprite);
 
@@ -209,7 +209,7 @@
 
     return Monster;
 
-  })(Entitiy);
+  })(Entity);
 
   Hero = (function(_super) {
 
@@ -266,7 +266,7 @@
 
     return Hero;
 
-  })(Entitiy);
+  })(Entity);
 
   InputHandler = (function() {
 
