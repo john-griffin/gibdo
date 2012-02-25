@@ -83,8 +83,7 @@
     };
 
     World.prototype.reset = function() {
-      this.hero.x = (this.width / 2) - 16;
-      return this.hero.y = (this.height / 2) - 16;
+      return this.hero.reset(this.width, this.height);
     };
 
     World.prototype.render = function() {
@@ -258,6 +257,11 @@
       if (this.x + this.velocity(mod) < width - 32) {
         return this.x += this.velocity(mod);
       }
+    };
+
+    Hero.prototype.reset = function(width, height) {
+      this.x = (width / 2) - (this.dw / 2);
+      return this.y = (height / 2) - (this.dh / 2);
     };
 
     return Hero;

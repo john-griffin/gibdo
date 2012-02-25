@@ -43,9 +43,7 @@ class World
     document.body.appendChild(canvas)
     canvas.getContext("2d")
 
-  reset: ->
-    @hero.x = (@width / 2) - 16
-    @hero.y = (@height / 2) - 16
+  reset: -> @hero.reset(@width, @height)
 
   render: -> sprite.draw(@ctx, @hero.x, @hero.y) for sprite in @sprites
 
@@ -115,6 +113,10 @@ class Hero extends Entitiy
   down:  (mod, height) -> @y += @velocity(mod) if @y + @velocity(mod) < height - 32
   left:  (mod)         -> @x -= @velocity(mod) if @x - @velocity(mod) > 0
   right: (mod, width)  -> @x += @velocity(mod) if @x + @velocity(mod) < width - 32
+
+  reset: (width, height) ->
+    @x = (width / 2)  - (@dw / 2)
+    @y = (height / 2) - (@dh / 2)
 
 class InputHandler
   keysDown: {}
