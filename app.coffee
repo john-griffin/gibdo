@@ -108,8 +108,7 @@ class Hero extends Entitiy
   speed: 256
   imageUrl: "images/hero.png"
 
-  draw: (ctx) -> 
-    @drawOffset(ctx, 34, 34)
+  draw: (ctx) -> @drawOffset(ctx, 34, 34)
 
   velocity: (mod) -> @speed * mod
 
