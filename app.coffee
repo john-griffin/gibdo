@@ -114,9 +114,9 @@ class Hero extends Entity
   velocity: (mod) -> @speed * mod
 
   up:    (mod)         -> @y -= @velocity(mod) if @y - @velocity(mod) > 0
-  down:  (mod, height) -> @y += @velocity(mod) if @y + @velocity(mod) < height - 32
+  down:  (mod, height) -> @y += @velocity(mod) if @y + @velocity(mod) < height - @dh
   left:  (mod)         -> @x -= @velocity(mod) if @x - @velocity(mod) > 0
-  right: (mod, width)  -> @x += @velocity(mod) if @x + @velocity(mod) < width - 32
+  right: (mod, width)  -> @x += @velocity(mod) if @x + @velocity(mod) < width - @dw
 
   viewOffsetX: (width)  -> (width / 2)   - (@dw / 2)
   viewOffsetY: (height) -> (height / 2)  - (@dh / 2)

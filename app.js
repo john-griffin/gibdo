@@ -240,7 +240,7 @@
     };
 
     Hero.prototype.down = function(mod, height) {
-      if (this.y + this.velocity(mod) < height - 32) {
+      if (this.y + this.velocity(mod) < height - this.dh) {
         return this.y += this.velocity(mod);
       }
     };
@@ -250,7 +250,7 @@
     };
 
     Hero.prototype.right = function(mod, width) {
-      if (this.x + this.velocity(mod) < width - 32) {
+      if (this.x + this.velocity(mod) < width - this.dw) {
         return this.x += this.velocity(mod);
       }
     };
