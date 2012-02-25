@@ -57,9 +57,9 @@
 
     World.prototype.height = 480;
 
-    World.prototype.viewWidth = 100;
+    World.prototype.viewWidth = 400;
 
-    World.prototype.viewHeight = 100;
+    World.prototype.viewHeight = 300;
 
     World.prototype.sprites = [];
 

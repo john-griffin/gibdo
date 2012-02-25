@@ -25,8 +25,8 @@ class Sprite
 class World
   width: 512
   height: 480
-  viewWidth: 100
-  viewHeight: 100
+  viewWidth: 400
+  viewHeight: 300
   sprites: []
 
   constructor: ->
