@@ -79,13 +79,13 @@ class Hero extends Sprite
   imageUrl: "images/hero.png"
 
   draw: (ctx) -> 
-    x = 32
-    y = 32
-    x = @x if @x < 32
-    y = @y if @y < 32
+    x = 34
+    y = 34
+    x = @x if @x < 34
+    y = @y if @y < 34
 
-    x = @x - 412 if @x > 444
-    y = @y - 380 if @y > 412
+    x = @x - 412 if @x > 446
+    y = @y - 380 if @y > 414
 
     # console.log @x, @y 
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready

@@ -167,12 +167,12 @@
 
     Hero.prototype.draw = function(ctx) {
       var x, y;
-      x = 32;
-      y = 32;
-      if (this.x < 32) x = this.x;
-      if (this.y < 32) y = this.y;
-      if (this.x > 444) x = this.x - 412;
-      if (this.y > 412) y = this.y - 380;
+      x = 34;
+      y = 34;
+      if (this.x < 34) x = this.x;
+      if (this.y < 34) y = this.y;
+      if (this.x > 446) x = this.x - 412;
+      if (this.y > 414) y = this.y - 380;
       if (this.ready) {
         return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
