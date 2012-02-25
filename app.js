@@ -132,10 +132,10 @@
       var x, y;
       x = this.x - herox + 34;
       y = this.y - heroy + 34;
-      if (herox - 34 <= 0) x = this.x;
-      if (heroy - 34 <= 0) y = this.y;
-      if (herox >= 444) x = this.x - 412;
-      if (heroy >= 412) y = this.y - 380;
+      if (herox < 34) x = this.x;
+      if (heroy < 34) y = this.y;
+      if (herox >= 446) x = this.x - 412;
+      if (heroy >= 414) y = this.y - 380;
       if (this.ready) {
         return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }

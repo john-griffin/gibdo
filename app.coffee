@@ -60,11 +60,11 @@ class Monster extends Sprite
     x = @x - herox + 34
     y = @y - heroy + 34
 
-    x = @x if herox - 34 <= 0
-    y = @y if heroy - 34 <= 0
+    x = @x if herox < 34
+    y = @y if heroy < 34
 
-    x = @x - 412 if herox >= 444
-    y = @y - 380 if heroy >= 412
+    x = @x - 412 if herox >= 446
+    y = @y - 380 if heroy >= 414
 
     # console.log herox - 34, heroy - 34
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
