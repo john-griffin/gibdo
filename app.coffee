@@ -45,7 +45,18 @@ class Background extends Sprite
     y = 480 - 100 if heroy > 414
     ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
-class Monster extends Sprite
+class Entitiy extends Sprite
+  drawOffset: (ctx, x, y, offsetX = @x, offsetY = @y) ->
+    x = @x if offsetX < 34
+    y = @y if offsetY < 34
+
+    x = @x - 412 if offsetX > 446
+    y = @y - 380 if offsetY > 414
+
+    ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
+
+
+class Monster extends Entitiy
   # 30 x 32
   speed: 128
   imageUrl: "images/monster.png"
@@ -59,17 +70,9 @@ class Monster extends Sprite
   draw: (ctx, herox, heroy) -> 
     x = @x - herox + 34
     y = @y - heroy + 34
+    @drawOffset(ctx, x, y, herox, heroy)
 
-    x = @x if herox < 34
-    y = @y if heroy < 34
-
-    x = @x - 412 if herox > 446
-    y = @y - 380 if heroy > 414
-
-    # console.log herox - 34, heroy - 34
-    ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
-
-class Hero extends Sprite
+class Hero extends Entitiy
   # 32 x 32
   sw: 32
   sh: 32
@@ -79,16 +82,7 @@ class Hero extends Sprite
   imageUrl: "images/hero.png"
 
   draw: (ctx) -> 
-    x = 34
-    y = 34
-    x = @x if @x < 34
-    y = @y if @y < 34
-
-    x = @x - 412 if @x > 446
-    y = @y - 380 if @y > 414
-
-    # console.log @x, @y 
-    ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
+    @drawOffset(ctx, 34, 34)
 
 class Game
   keysDown: {}

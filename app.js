@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Game, Hero, Monster, Sprite, World,
+  var $, Background, Entitiy, Game, Hero, Monster, Sprite, World,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -104,6 +104,30 @@
 
   })(Sprite);
 
+  Entitiy = (function(_super) {
+
+    __extends(Entitiy, _super);
+
+    function Entitiy() {
+      Entitiy.__super__.constructor.apply(this, arguments);
+    }
+
+    Entitiy.prototype.drawOffset = function(ctx, x, y, offsetX, offsetY) {
+      if (offsetX == null) offsetX = this.x;
+      if (offsetY == null) offsetY = this.y;
+      if (offsetX < 34) x = this.x;
+      if (offsetY < 34) y = this.y;
+      if (offsetX > 446) x = this.x - 412;
+      if (offsetY > 414) y = this.y - 380;
+      if (this.ready) {
+        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
+      }
+    };
+
+    return Entitiy;
+
+  })(Sprite);
+
   Monster = (function(_super) {
 
     __extends(Monster, _super);
@@ -132,18 +156,12 @@
       var x, y;
       x = this.x - herox + 34;
       y = this.y - heroy + 34;
-      if (herox < 34) x = this.x;
-      if (heroy < 34) y = this.y;
-      if (herox > 446) x = this.x - 412;
-      if (heroy > 414) y = this.y - 380;
-      if (this.ready) {
-        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
-      }
+      return this.drawOffset(ctx, x, y, herox, heroy);
     };
 
     return Monster;
 
-  })(Sprite);
+  })(Entitiy);
 
   Hero = (function(_super) {
 
@@ -166,21 +184,12 @@
     Hero.prototype.imageUrl = "images/hero.png";
 
     Hero.prototype.draw = function(ctx) {
-      var x, y;
-      x = 34;
-      y = 34;
-      if (this.x < 34) x = this.x;
-      if (this.y < 34) y = this.y;
-      if (this.x > 446) x = this.x - 412;
-      if (this.y > 414) y = this.y - 380;
-      if (this.ready) {
-        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
-      }
+      return this.drawOffset(ctx, 34, 34);
     };
 
     return Hero;
 
-  })(Sprite);
+  })(Entitiy);
 
   Game = (function() {
 
