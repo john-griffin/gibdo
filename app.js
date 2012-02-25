@@ -177,15 +177,13 @@
       Entity.__super__.constructor.apply(this, arguments);
     }
 
-    Entity.prototype.drawOffset = function(x, y, offsetX, offsetY) {
-      if (offsetX == null) offsetX = this.x;
-      if (offsetY == null) offsetY = this.y;
-      if (offsetX < this.world.heroViewOffsetX()) x = this.x;
-      if (offsetY < this.world.heroViewOffsetY()) y = this.y;
-      if (offsetX > this.world.viewWidthLimit() + this.world.heroViewOffsetX()) {
+    Entity.prototype.drawOffset = function(x, y) {
+      if (this.world.hero.x < this.world.heroViewOffsetX()) x = this.x;
+      if (this.world.hero.y < this.world.heroViewOffsetY()) y = this.y;
+      if (this.world.hero.x > this.world.viewWidthLimit() + this.world.heroViewOffsetX()) {
         x = this.x - this.world.viewWidthLimit();
       }
-      if (offsetY > this.world.viewHeightLimit() + this.world.heroViewOffsetY()) {
+      if (this.world.hero.y > this.world.viewHeightLimit() + this.world.heroViewOffsetY()) {
         y = this.y - this.world.viewHeightLimit();
       }
       if (this.ready) {
@@ -225,7 +223,7 @@
       var x, y;
       x = this.x - this.world.hero.x + this.world.heroViewOffsetX();
       y = this.y - this.world.hero.y + this.world.heroViewOffsetY();
-      return this.drawOffset(x, y, this.world.hero.x, this.world.hero.y);
+      return this.drawOffset(x, y);
     };
 
     return Monster;

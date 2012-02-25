@@ -82,11 +82,11 @@ class Background extends Sprite
     @world.ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Entity extends Sprite
-  drawOffset: (x, y, offsetX = @x, offsetY = @y) ->
-    x = @x if offsetX < @world.heroViewOffsetX()
-    y = @y if offsetY < @world.heroViewOffsetY()
-    x = @x - @world.viewWidthLimit() if offsetX > @world.viewWidthLimit() + @world.heroViewOffsetX()
-    y = @y - @world.viewHeightLimit() if offsetY > @world.viewHeightLimit() + @world.heroViewOffsetY()
+  drawOffset: (x, y) ->
+    x = @x if @world.hero.x < @world.heroViewOffsetX()
+    y = @y if @world.hero.y < @world.heroViewOffsetY()
+    x = @x - @world.viewWidthLimit() if @world.hero.x > @world.viewWidthLimit() + @world.heroViewOffsetX()
+    y = @y - @world.viewHeightLimit() if @world.hero.y > @world.viewHeightLimit() + @world.heroViewOffsetY()
 
     @world.ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 
@@ -105,7 +105,7 @@ class Monster extends Entity
   draw: -> 
     x = @x - @world.hero.x + @world.heroViewOffsetX()
     y = @y - @world.hero.y + @world.heroViewOffsetY()
-    @drawOffset(x, y, @world.hero.x, @world.hero.y)
+    @drawOffset(x, y)
 
 class Hero extends Entity
   # 32 x 32
