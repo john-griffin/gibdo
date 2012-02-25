@@ -177,19 +177,19 @@
       Entity.__super__.constructor.apply(this, arguments);
     }
 
-    Entity.prototype.drawOffset = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, offsetX, offsetY) {
+    Entity.prototype.drawOffset = function(x, y, offsetX, offsetY) {
       if (offsetX == null) offsetX = this.x;
       if (offsetY == null) offsetY = this.y;
-      if (offsetX < heroOffsetX) x = this.x;
-      if (offsetY < heroOffsetY) y = this.y;
-      if (offsetX > gameWidth - viewWidth + heroOffsetX) {
-        x = this.x - (gameWidth - viewWidth);
+      if (offsetX < this.world.heroViewOffsetX()) x = this.x;
+      if (offsetY < this.world.heroViewOffsetY()) y = this.y;
+      if (offsetX > this.world.viewWidthLimit() + this.world.heroViewOffsetX()) {
+        x = this.x - this.world.viewWidthLimit();
       }
-      if (offsetY > gameHeight - viewHeight + heroOffsetY) {
-        y = this.y - (gameHeight - viewHeight);
+      if (offsetY > this.world.viewHeightLimit() + this.world.heroViewOffsetY()) {
+        y = this.y - this.world.viewHeightLimit();
       }
       if (this.ready) {
-        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
+        return this.world.ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
     };
 
@@ -221,11 +221,11 @@
 
     Monster.prototype.dh = 32;
 
-    Monster.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) {
+    Monster.prototype.draw = function() {
       var x, y;
-      x = this.x - herox + heroOffsetX;
-      y = this.y - heroy + heroOffsetY;
-      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, herox, heroy);
+      x = this.x - this.world.hero.x + this.world.heroViewOffsetX();
+      y = this.y - this.world.hero.y + this.world.heroViewOffsetY();
+      return this.drawOffset(x, y, this.world.hero.x, this.world.hero.y);
     };
 
     return Monster;
@@ -252,8 +252,8 @@
 
     Hero.prototype.imageUrl = "images/hero.png";
 
-    Hero.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight) {
-      return this.drawOffset(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, heroOffsetX, heroOffsetY);
+    Hero.prototype.draw = function() {
+      return this.drawOffset(this.world.heroViewOffsetX(), this.world.heroViewOffsetY());
     };
 
     Hero.prototype.velocity = function(mod) {
