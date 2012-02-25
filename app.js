@@ -47,12 +47,6 @@
       this.image = image;
     }
 
-    Sprite.prototype.draw = function(ctx) {
-      if (this.ready) {
-        return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
-      }
-    };
-
     return Sprite;
 
   })();

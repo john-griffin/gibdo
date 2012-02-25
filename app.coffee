@@ -22,8 +22,6 @@ class Sprite
     image.onload = => @ready = true
     @image = image
 
-  draw: (ctx) -> ctx.drawImage(@image, @sx, @sy, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
-
 class World
   width: 512
   height: 480
