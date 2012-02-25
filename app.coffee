@@ -50,6 +50,11 @@ class World
     @hero.draw(@ctx)
     @monster.draw(@ctx, @hero.x, @hero.y)
 
+  up:    (mod) -> @hero.up(mod)
+  down:  (mod) -> @hero.down(mod, @height)
+  left:  (mod) -> @hero.left(mod)
+  right: (mod) -> @hero.right(mod, @width)
+
 class Background extends Sprite
   # 512x480
   sw: 100
@@ -106,25 +111,25 @@ class Hero extends Entitiy
   draw: (ctx) -> 
     @drawOffset(ctx, 34, 34)
 
+  velocity: (mod) -> @speed * mod
+
+  up:    (mod)         -> @y -= @velocity(mod) if @y - @velocity(mod) > 0
+  down:  (mod, height) -> @y += @velocity(mod) if @y + @velocity(mod) < height - 32
+  left:  (mod)         -> @x -= @velocity(mod) if @x - @velocity(mod) > 0
+  right: (mod, width)  -> @x += @velocity(mod) if @x + @velocity(mod) < width - 32
+
 class InputHandler
   keysDown: {}
 
   constructor: (@world) ->
     $("body").keydown (e) => @keysDown[e.keyCode] = true
-    $("body").keyup (e) => delete @keysDown[e.keyCode]
+    $("body").keyup (e)   => delete @keysDown[e.keyCode]
 
   update: (modifier) ->
-    hero = @world.hero
-    # console.log modifier
-    velocity = hero.speed * modifier
-    # Player holding up
-    hero.y -= velocity if 38 of @keysDown and hero.y - velocity > 0
-    # Player holding down
-    hero.y += velocity if 40 of @keysDown and hero.y + velocity < @world.height - 32
-    # Player holding left
-    hero.x -= velocity if 37 of @keysDown and hero.x - velocity > 0
-    # Player holding right
-    hero.x += velocity if 39 of @keysDown and hero.x + velocity < @world.width - 32
+    @world.up(modifier)    if 38 of @keysDown
+    @world.down(modifier)  if 40 of @keysDown
+    @world.left(modifier)  if 37 of @keysDown
+    @world.right(modifier) if 39 of @keysDown
 
 class Game
   setup: ->

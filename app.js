@@ -90,6 +90,22 @@
       return this.monster.draw(this.ctx, this.hero.x, this.hero.y);
     };
 
+    World.prototype.up = function(mod) {
+      return this.hero.up(mod);
+    };
+
+    World.prototype.down = function(mod) {
+      return this.hero.down(mod, this.height);
+    };
+
+    World.prototype.left = function(mod) {
+      return this.hero.left(mod);
+    };
+
+    World.prototype.right = function(mod) {
+      return this.hero.right(mod, this.width);
+    };
+
     return World;
 
   })();
@@ -212,6 +228,30 @@
       return this.drawOffset(ctx, 34, 34);
     };
 
+    Hero.prototype.velocity = function(mod) {
+      return this.speed * mod;
+    };
+
+    Hero.prototype.up = function(mod) {
+      if (this.y - this.velocity(mod) > 0) return this.y -= this.velocity(mod);
+    };
+
+    Hero.prototype.down = function(mod, height) {
+      if (this.y + this.velocity(mod) < height - 32) {
+        return this.y += this.velocity(mod);
+      }
+    };
+
+    Hero.prototype.left = function(mod) {
+      if (this.x - this.velocity(mod) > 0) return this.x -= this.velocity(mod);
+    };
+
+    Hero.prototype.right = function(mod, width) {
+      if (this.x + this.velocity(mod) < width - 32) {
+        return this.x += this.velocity(mod);
+      }
+    };
+
     return Hero;
 
   })(Entitiy);
@@ -232,17 +272,10 @@
     }
 
     InputHandler.prototype.update = function(modifier) {
-      var hero, velocity;
-      hero = this.world.hero;
-      velocity = hero.speed * modifier;
-      if (38 in this.keysDown && hero.y - velocity > 0) hero.y -= velocity;
-      if (40 in this.keysDown && hero.y + velocity < this.world.height - 32) {
-        hero.y += velocity;
-      }
-      if (37 in this.keysDown && hero.x - velocity > 0) hero.x -= velocity;
-      if (39 in this.keysDown && hero.x + velocity < this.world.width - 32) {
-        return hero.x += velocity;
-      }
+      if (38 in this.keysDown) this.world.up(modifier);
+      if (40 in this.keysDown) this.world.down(modifier);
+      if (37 in this.keysDown) this.world.left(modifier);
+      if (39 in this.keysDown) return this.world.right(modifier);
     };
 
     return InputHandler;
