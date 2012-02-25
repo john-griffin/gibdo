@@ -26,6 +26,12 @@ class World
 
   reset: -> @hero.reset(@width, @height)
 
+  heroViewOffsetX: -> @hero.viewOffsetX(@viewWidth)
+  heroViewOffsetY: -> @hero.viewOffsetY(@viewHeight)
+
+  viewWidthLimit:  -> @width  - @viewWidth
+  viewHeightLimit: -> @height - @viewHeight
+
   render: -> 
     heroOffsetX = @hero.viewOffsetX(@viewWidth)
     heroOffsetY = @hero.viewOffsetY(@viewHeight)
@@ -66,14 +72,14 @@ class Background extends Sprite
     @sh = world.viewHeight
     super(world)
 
-  draw: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) -> 
-    x = herox - heroOffsetX
-    y = heroy - heroOffsetY
-    x = 0 if herox < heroOffsetX
-    y = 0 if heroy < heroOffsetY
-    x = gameWidth - viewWidth if herox > gameWidth - viewWidth + heroOffsetX
-    y = gameHeight - viewHeight if heroy > gameHeight - viewHeight + heroOffsetY
-    ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
+  draw: () -> 
+    x = @world.hero.x - @world.heroViewOffsetX()
+    y = @world.hero.y - @world.heroViewOffsetY()
+    x = 0 if @world.hero.x < @world.heroViewOffsetX()
+    y = 0 if @world.hero.y < @world.heroViewOffsetY()
+    x = @world.viewWidthLimit() if @world.hero.x > @world.viewWidthLimit() + @world.heroViewOffsetX()
+    y = @world.viewHeightLimit() if @world.hero.y > @world.viewHeightLimit() + @world.heroViewOffsetY()
+    @world.ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Entity extends Sprite
   drawOffset: (ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, x, y, offsetX = @x, offsetY = @y) ->

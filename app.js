@@ -45,6 +45,22 @@
       return this.hero.reset(this.width, this.height);
     };
 
+    World.prototype.heroViewOffsetX = function() {
+      return this.hero.viewOffsetX(this.viewWidth);
+    };
+
+    World.prototype.heroViewOffsetY = function() {
+      return this.hero.viewOffsetY(this.viewHeight);
+    };
+
+    World.prototype.viewWidthLimit = function() {
+      return this.width - this.viewWidth;
+    };
+
+    World.prototype.viewHeightLimit = function() {
+      return this.height - this.viewHeight;
+    };
+
     World.prototype.render = function() {
       var heroOffsetX, heroOffsetY, sprite, _i, _len, _ref, _results;
       heroOffsetX = this.hero.viewOffsetX(this.viewWidth);
@@ -132,18 +148,20 @@
       Background.__super__.constructor.call(this, world);
     }
 
-    Background.prototype.draw = function(ctx, heroOffsetX, heroOffsetY, viewWidth, viewHeight, gameWidth, gameHeight, herox, heroy) {
+    Background.prototype.draw = function() {
       var x, y;
-      x = herox - heroOffsetX;
-      y = heroy - heroOffsetY;
-      if (herox < heroOffsetX) x = 0;
-      if (heroy < heroOffsetY) y = 0;
-      if (herox > gameWidth - viewWidth + heroOffsetX) x = gameWidth - viewWidth;
-      if (heroy > gameHeight - viewHeight + heroOffsetY) {
-        y = gameHeight - viewHeight;
+      x = this.world.hero.x - this.world.heroViewOffsetX();
+      y = this.world.hero.y - this.world.heroViewOffsetY();
+      if (this.world.hero.x < this.world.heroViewOffsetX()) x = 0;
+      if (this.world.hero.y < this.world.heroViewOffsetY()) y = 0;
+      if (this.world.hero.x > this.world.viewWidthLimit() + this.world.heroViewOffsetX()) {
+        x = this.world.viewWidthLimit();
+      }
+      if (this.world.hero.y > this.world.viewHeightLimit() + this.world.heroViewOffsetY()) {
+        y = this.world.viewHeightLimit();
       }
       if (this.ready) {
-        return ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
+        return this.world.ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
       }
     };
 
