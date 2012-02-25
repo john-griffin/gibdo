@@ -253,9 +253,17 @@
       }
     };
 
+    Hero.prototype.viewOffsetX = function(width) {
+      return (width / 2) - (this.dw / 2);
+    };
+
+    Hero.prototype.viewOffsetY = function(height) {
+      return (height / 2) - (this.dh / 2);
+    };
+
     Hero.prototype.reset = function(width, height) {
-      this.x = (width / 2) - (this.dw / 2);
-      return this.y = (height / 2) - (this.dh / 2);
+      this.x = this.viewOffsetX(width);
+      return this.y = this.viewOffsetY(height);
     };
 
     return Hero;

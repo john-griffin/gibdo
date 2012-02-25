@@ -115,9 +115,12 @@ class Hero extends Entity
   left:  (mod)         -> @x -= @velocity(mod) if @x - @velocity(mod) > 0
   right: (mod, width)  -> @x += @velocity(mod) if @x + @velocity(mod) < width - 32
 
+  viewOffsetX: (width)  -> (width / 2)   - (@dw / 2)
+  viewOffsetY: (height) -> (height / 2)  - (@dh / 2)
+
   reset: (width, height) ->
-    @x = (width / 2)  - (@dw / 2)
-    @y = (height / 2) - (@dh / 2)
+    @x = @viewOffsetX(width)
+    @y = @viewOffsetY(height)
 
 class InputHandler
   keysDown: {}
