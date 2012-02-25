@@ -116,9 +116,9 @@
 
     Monster.prototype.imageUrl = "images/monster.png";
 
-    Monster.prototype.x = 50;
+    Monster.prototype.x = 400;
 
-    Monster.prototype.y = 50;
+    Monster.prototype.y = 400;
 
     Monster.prototype.sw = 30;
 
@@ -134,6 +134,8 @@
       y = this.y - heroy + 34;
       if (herox - 34 <= 0) x = this.x;
       if (heroy - 34 <= 0) y = this.y;
+      if (herox >= 444) x = this.x - 412;
+      if (heroy >= 412) y = this.y - 380;
       if (this.ready) {
         return ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }

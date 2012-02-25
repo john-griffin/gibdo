@@ -49,8 +49,8 @@ class Monster extends Sprite
   # 30 x 32
   speed: 128
   imageUrl: "images/monster.png"
-  x: 50
-  y: 50
+  x: 400
+  y: 400
   sw: 30
   sh: 32
   dw: 30
@@ -63,7 +63,10 @@ class Monster extends Sprite
     x = @x if herox - 34 <= 0
     y = @y if heroy - 34 <= 0
 
-    # console.log x, y
+    x = @x - 412 if herox >= 444
+    y = @y - 380 if heroy >= 412
+
+    # console.log herox - 34, heroy - 34
     ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 
 class Hero extends Sprite
