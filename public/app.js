@@ -1,8 +1,8 @@
 (function() {
   var $, Background, Entity, Game, Hero, InputHandler, Monster, Sprite, World,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   $ = Zepto;
 
@@ -11,6 +11,49 @@
     game = new Game;
     return game.run();
   });
+
+  Game = (function() {
+
+    function Game() {
+      this.main = __bind(this.main, this);
+    }
+
+    Game.prototype.setup = function() {
+      this.world = new World;
+      return this.inputHandler = new InputHandler(this.world);
+    };
+
+    Game.prototype.reset = function() {
+      return this.world.reset();
+    };
+
+    Game.prototype.update = function(modifier) {
+      return this.inputHandler.update(modifier);
+    };
+
+    Game.prototype.render = function() {
+      return this.world.render();
+    };
+
+    Game.prototype.main = function() {
+      var delta, now;
+      now = Date.now();
+      delta = now - this.then;
+      this.update(delta / 1000);
+      this.render();
+      return this.then = now;
+    };
+
+    Game.prototype.run = function() {
+      this.setup();
+      this.reset();
+      this.then = Date.now();
+      return setInterval(this.main, 1);
+    };
+
+    return Game;
+
+  })();
 
   World = (function() {
 
@@ -107,6 +150,32 @@
     };
 
     return World;
+
+  })();
+
+  InputHandler = (function() {
+
+    InputHandler.prototype.keysDown = {};
+
+    function InputHandler(world) {
+      var _this = this;
+      this.world = world;
+      $("body").keydown(function(e) {
+        return _this.keysDown[e.keyCode] = true;
+      });
+      $("body").keyup(function(e) {
+        return delete _this.keysDown[e.keyCode];
+      });
+    }
+
+    InputHandler.prototype.update = function(modifier) {
+      if (38 in this.keysDown) this.world.up(modifier);
+      if (40 in this.keysDown) this.world.down(modifier);
+      if (37 in this.keysDown) this.world.left(modifier);
+      if (39 in this.keysDown) return this.world.right(modifier);
+    };
+
+    return InputHandler;
 
   })();
 
@@ -309,74 +378,5 @@
     return Hero;
 
   })(Entity);
-
-  InputHandler = (function() {
-
-    InputHandler.prototype.keysDown = {};
-
-    function InputHandler(world) {
-      var _this = this;
-      this.world = world;
-      $("body").keydown(function(e) {
-        return _this.keysDown[e.keyCode] = true;
-      });
-      $("body").keyup(function(e) {
-        return delete _this.keysDown[e.keyCode];
-      });
-    }
-
-    InputHandler.prototype.update = function(modifier) {
-      if (38 in this.keysDown) this.world.up(modifier);
-      if (40 in this.keysDown) this.world.down(modifier);
-      if (37 in this.keysDown) this.world.left(modifier);
-      if (39 in this.keysDown) return this.world.right(modifier);
-    };
-
-    return InputHandler;
-
-  })();
-
-  Game = (function() {
-
-    function Game() {
-      this.main = __bind(this.main, this);
-    }
-
-    Game.prototype.setup = function() {
-      this.world = new World;
-      return this.inputHandler = new InputHandler(this.world);
-    };
-
-    Game.prototype.reset = function() {
-      return this.world.reset();
-    };
-
-    Game.prototype.update = function(modifier) {
-      return this.inputHandler.update(modifier);
-    };
-
-    Game.prototype.render = function() {
-      return this.world.render();
-    };
-
-    Game.prototype.main = function() {
-      var delta, now;
-      now = Date.now();
-      delta = now - this.then;
-      this.update(delta / 1000);
-      this.render();
-      return this.then = now;
-    };
-
-    Game.prototype.run = function() {
-      this.setup();
-      this.reset();
-      this.then = Date.now();
-      return setInterval(this.main, 1);
-    };
-
-    return Game;
-
-  })();
 
 }).call(this);

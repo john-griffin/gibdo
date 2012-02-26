@@ -8,6 +8,30 @@ $ ->
   game = new Game
   game.run()
 
+class Game
+  setup: ->
+    @world = new World
+    @inputHandler = new InputHandler(@world)
+
+  reset: -> @world.reset()
+
+  update: (modifier) -> @inputHandler.update(modifier)
+
+  render: -> @world.render()
+
+  main: =>
+    now = Date.now()
+    delta = now - @then
+    @update(delta / 1000)
+    @render()
+    @then = now
+
+  run: ->
+    @setup()
+    @reset()
+    @then = Date.now()
+    setInterval(@main, 1)
+
 class World
   width: 512
   height: 480
@@ -51,6 +75,19 @@ class World
   down:  (mod) -> @hero.down(mod, @height)
   left:  (mod) -> @hero.left(mod)
   right: (mod) -> @hero.right(mod, @width)
+
+class InputHandler
+  keysDown: {}
+
+  constructor: (@world) ->
+    $("body").keydown (e) => @keysDown[e.keyCode] = true
+    $("body").keyup (e)   => delete @keysDown[e.keyCode]
+
+  update: (modifier) ->
+    @world.up(modifier)    if 38 of @keysDown
+    @world.down(modifier)  if 40 of @keysDown
+    @world.left(modifier)  if 37 of @keysDown
+    @world.right(modifier) if 39 of @keysDown
 
 class Sprite
   ready: false
@@ -146,40 +183,3 @@ class Hero extends Entity
   reset: (width, height) ->
     @x = @viewOffsetX(width)
     @y = @viewOffsetY(height)
-
-class InputHandler
-  keysDown: {}
-
-  constructor: (@world) ->
-    $("body").keydown (e) => @keysDown[e.keyCode] = true
-    $("body").keyup (e)   => delete @keysDown[e.keyCode]
-
-  update: (modifier) ->
-    @world.up(modifier)    if 38 of @keysDown
-    @world.down(modifier)  if 40 of @keysDown
-    @world.left(modifier)  if 37 of @keysDown
-    @world.right(modifier) if 39 of @keysDown
-
-class Game
-  setup: ->
-    @world = new World
-    @inputHandler = new InputHandler(@world)
-
-  reset: -> @world.reset()
-
-  update: (modifier) -> @inputHandler.update(modifier)
-
-  render: -> @world.render()
-
-  main: =>
-    now = Date.now()
-    delta = now - @then
-    @update(delta / 1000)
-    @render()
-    @then = now
-
-  run: ->
-    @setup()
-    @reset()
-    @then = Date.now()
-    setInterval(@main, 1)
