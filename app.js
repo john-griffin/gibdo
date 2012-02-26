@@ -69,7 +69,7 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sprite = _ref[_i];
-        _results.push(sprite.draw(this.ctx, heroOffsetX, heroOffsetY, this.viewWidth, this.viewHeight, this.width, this.height, this.hero.x, this.hero.y));
+        _results.push(sprite.draw());
       }
       return _results;
     };

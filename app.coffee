@@ -35,7 +35,7 @@ class World
   render: -> 
     heroOffsetX = @hero.viewOffsetX(@viewWidth)
     heroOffsetY = @hero.viewOffsetY(@viewHeight)
-    sprite.draw(@ctx, heroOffsetX, heroOffsetY, @viewWidth, @viewHeight, @width, @height, @hero.x, @hero.y) for sprite in @sprites
+    sprite.draw() for sprite in @sprites
 
   up:    (mod) -> @hero.up(mod)
   down:  (mod) -> @hero.down(mod, @height)
