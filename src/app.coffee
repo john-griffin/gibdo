@@ -9,15 +9,17 @@ $ ->
   game.run()
 
 class Game
+  run: ->
+    @setup()
+    @reset()
+    @then = Date.now()
+    setInterval(@main, 1)
+
   setup: ->
     @world = new World
     @inputHandler = new InputHandler(@world)
 
   reset: -> @world.reset()
-
-  update: (modifier) -> @inputHandler.update(modifier)
-
-  render: -> @world.render()
 
   main: =>
     now = Date.now()
@@ -26,11 +28,9 @@ class Game
     @render()
     @then = now
 
-  run: ->
-    @setup()
-    @reset()
-    @then = Date.now()
-    setInterval(@main, 1)
+  update: (modifier) -> @inputHandler.update(modifier)
+
+  render: -> @world.render()
 
 class World
   width: 512

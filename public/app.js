@@ -18,6 +18,13 @@
       this.main = __bind(this.main, this);
     }
 
+    Game.prototype.run = function() {
+      this.setup();
+      this.reset();
+      this.then = Date.now();
+      return setInterval(this.main, 1);
+    };
+
     Game.prototype.setup = function() {
       this.world = new World;
       return this.inputHandler = new InputHandler(this.world);
@@ -25,14 +32,6 @@
 
     Game.prototype.reset = function() {
       return this.world.reset();
-    };
-
-    Game.prototype.update = function(modifier) {
-      return this.inputHandler.update(modifier);
-    };
-
-    Game.prototype.render = function() {
-      return this.world.render();
     };
 
     Game.prototype.main = function() {
@@ -44,11 +43,12 @@
       return this.then = now;
     };
 
-    Game.prototype.run = function() {
-      this.setup();
-      this.reset();
-      this.then = Date.now();
-      return setInterval(this.main, 1);
+    Game.prototype.update = function(modifier) {
+      return this.inputHandler.update(modifier);
+    };
+
+    Game.prototype.render = function() {
+      return this.world.render();
     };
 
     return Game;
