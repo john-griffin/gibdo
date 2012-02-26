@@ -193,14 +193,16 @@
       Entity.__super__.constructor.apply(this, arguments);
     }
 
-    Entity.prototype.drawOffset = function(x, y) {
-      if (this.world.atViewLimitLeft()) x = this.x;
-      if (this.world.atViewLimitTop()) y = this.y;
-      if (this.world.atViewLimitRight()) x = this.x - this.world.viewWidthLimit();
-      if (this.world.atViewLimitBottom()) {
-        y = this.y - this.world.viewHeightLimit();
+    Entity.prototype.draw = function() {
+      if (this.world.atViewLimitLeft()) this.dx = this.x;
+      if (this.world.atViewLimitTop()) this.dy = this.y;
+      if (this.world.atViewLimitRight()) {
+        this.dx = this.x - this.world.viewWidthLimit();
       }
-      return this.drawImage(this.sx, this.sy, x, y);
+      if (this.world.atViewLimitBottom()) {
+        this.dy = this.y - this.world.viewHeightLimit();
+      }
+      return this.drawImage(this.sx, this.sy, this.dx, this.dy);
     };
 
     return Entity;
@@ -232,10 +234,9 @@
     Monster.prototype.dh = 32;
 
     Monster.prototype.draw = function() {
-      var x, y;
-      x = this.x - this.world.hero.x + this.world.heroViewOffsetX();
-      y = this.y - this.world.hero.y + this.world.heroViewOffsetY();
-      return this.drawOffset(x, y);
+      this.dx = this.x - this.world.hero.x + this.world.heroViewOffsetX();
+      this.dy = this.y - this.world.hero.y + this.world.heroViewOffsetY();
+      return Monster.__super__.draw.apply(this, arguments);
     };
 
     return Monster;
@@ -263,7 +264,9 @@
     Hero.prototype.imageUrl = "images/hero.png";
 
     Hero.prototype.draw = function() {
-      return this.drawOffset(this.world.heroViewOffsetX(), this.world.heroViewOffsetY());
+      this.dx = this.world.heroViewOffsetX();
+      this.dy = this.world.heroViewOffsetY();
+      return Hero.__super__.draw.apply(this, arguments);
     };
 
     Hero.prototype.velocity = function(mod) {

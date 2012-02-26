@@ -96,12 +96,12 @@ class Background extends Sprite
     @drawImage(x, y, @dx, @dy)
 
 class Entity extends Sprite
-  drawOffset: (x, y) ->
-    x = @x if @world.atViewLimitLeft()
-    y = @y if @world.atViewLimitTop()
-    x = @x - @world.viewWidthLimit() if @world.atViewLimitRight()
-    y = @y - @world.viewHeightLimit() if @world.atViewLimitBottom()
-    @drawImage(@sx, @sy, x, y)
+  draw: ->
+    @dx = @x if @world.atViewLimitLeft()
+    @dy = @y if @world.atViewLimitTop()
+    @dx = @x - @world.viewWidthLimit() if @world.atViewLimitRight()
+    @dy = @y - @world.viewHeightLimit() if @world.atViewLimitBottom()
+    @drawImage(@sx, @sy, @dx, @dy)
 
 class Monster extends Entity
   # 30 x 32
@@ -115,9 +115,9 @@ class Monster extends Entity
   dh: 32
 
   draw: -> 
-    x = @x - @world.hero.x + @world.heroViewOffsetX()
-    y = @y - @world.hero.y + @world.heroViewOffsetY()
-    @drawOffset(x, y)
+    @dx = @x - @world.hero.x + @world.heroViewOffsetX()
+    @dy = @y - @world.hero.y + @world.heroViewOffsetY()
+    super
 
 class Hero extends Entity
   # 32 x 32
@@ -128,7 +128,10 @@ class Hero extends Entity
   speed: 256
   imageUrl: "images/hero.png"
 
-  draw: -> @drawOffset(@world.heroViewOffsetX(), @world.heroViewOffsetY())
+  draw: -> 
+    @dx = @world.heroViewOffsetX()
+    @dy = @world.heroViewOffsetY()
+    super
 
   velocity: (mod) -> @speed * mod
 
