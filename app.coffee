@@ -61,6 +61,11 @@ class Sprite
     image.onload = => @ready = true
     @image = image
 
+  heroLeftOfCentre:   -> @world.hero.x < @world.heroViewOffsetX()
+  heroAboveCentre:    -> @world.hero.y < @world.heroViewOffsetY()
+  heroRightOfCentre:  -> @world.hero.x > @world.viewWidthLimit() + @world.heroViewOffsetX()
+  heroBelowCentre:    -> @world.hero.y > @world.viewHeightLimit() + @world.heroViewOffsetY()
+
 class Background extends Sprite
   # 512x480
   imageUrl: "images/background.png"
@@ -75,18 +80,18 @@ class Background extends Sprite
   draw: -> 
     x = @world.hero.x - @world.heroViewOffsetX()
     y = @world.hero.y - @world.heroViewOffsetY()
-    x = 0 if @world.hero.x < @world.heroViewOffsetX()
-    y = 0 if @world.hero.y < @world.heroViewOffsetY()
-    x = @world.viewWidthLimit() if @world.hero.x > @world.viewWidthLimit() + @world.heroViewOffsetX()
-    y = @world.viewHeightLimit() if @world.hero.y > @world.viewHeightLimit() + @world.heroViewOffsetY()
+    x = 0 if @heroLeftOfCentre()
+    y = 0 if @heroAboveCentre()
+    x = @world.viewWidthLimit() if @heroRightOfCentre()
+    y = @world.viewHeightLimit() if @heroBelowCentre()
     @world.ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Entity extends Sprite
   drawOffset: (x, y) ->
-    x = @x if @world.hero.x < @world.heroViewOffsetX()
-    y = @y if @world.hero.y < @world.heroViewOffsetY()
-    x = @x - @world.viewWidthLimit() if @world.hero.x > @world.viewWidthLimit() + @world.heroViewOffsetX()
-    y = @y - @world.viewHeightLimit() if @world.hero.y > @world.viewHeightLimit() + @world.heroViewOffsetY()
+    x = @x if @heroLeftOfCentre()
+    y = @y if @heroAboveCentre()
+    x = @x - @world.viewWidthLimit() if @heroRightOfCentre()
+    y = @y - @world.viewHeightLimit() if @heroBelowCentre()
 
     @world.ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 

@@ -130,6 +130,22 @@
       this.image = image;
     }
 
+    Sprite.prototype.heroLeftOfCentre = function() {
+      return this.world.hero.x < this.world.heroViewOffsetX();
+    };
+
+    Sprite.prototype.heroAboveCentre = function() {
+      return this.world.hero.y < this.world.heroViewOffsetY();
+    };
+
+    Sprite.prototype.heroRightOfCentre = function() {
+      return this.world.hero.x > this.world.viewWidthLimit() + this.world.heroViewOffsetX();
+    };
+
+    Sprite.prototype.heroBelowCentre = function() {
+      return this.world.hero.y > this.world.viewHeightLimit() + this.world.heroViewOffsetY();
+    };
+
     return Sprite;
 
   })();
@@ -152,14 +168,10 @@
       var x, y;
       x = this.world.hero.x - this.world.heroViewOffsetX();
       y = this.world.hero.y - this.world.heroViewOffsetY();
-      if (this.world.hero.x < this.world.heroViewOffsetX()) x = 0;
-      if (this.world.hero.y < this.world.heroViewOffsetY()) y = 0;
-      if (this.world.hero.x > this.world.viewWidthLimit() + this.world.heroViewOffsetX()) {
-        x = this.world.viewWidthLimit();
-      }
-      if (this.world.hero.y > this.world.viewHeightLimit() + this.world.heroViewOffsetY()) {
-        y = this.world.viewHeightLimit();
-      }
+      if (this.heroLeftOfCentre()) x = 0;
+      if (this.heroAboveCentre()) y = 0;
+      if (this.heroRightOfCentre()) x = this.world.viewWidthLimit();
+      if (this.heroBelowCentre()) y = this.world.viewHeightLimit();
       if (this.ready) {
         return this.world.ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
       }
@@ -178,14 +190,10 @@
     }
 
     Entity.prototype.drawOffset = function(x, y) {
-      if (this.world.hero.x < this.world.heroViewOffsetX()) x = this.x;
-      if (this.world.hero.y < this.world.heroViewOffsetY()) y = this.y;
-      if (this.world.hero.x > this.world.viewWidthLimit() + this.world.heroViewOffsetX()) {
-        x = this.x - this.world.viewWidthLimit();
-      }
-      if (this.world.hero.y > this.world.viewHeightLimit() + this.world.heroViewOffsetY()) {
-        y = this.y - this.world.viewHeightLimit();
-      }
+      if (this.heroLeftOfCentre()) x = this.x;
+      if (this.heroAboveCentre()) y = this.y;
+      if (this.heroRightOfCentre()) x = this.x - this.world.viewWidthLimit();
+      if (this.heroBelowCentre()) y = this.y - this.world.viewHeightLimit();
       if (this.ready) {
         return this.world.ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
