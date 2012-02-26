@@ -1,0 +1,170 @@
+<!DOCTYPE html>  <html> <head>   <title>app.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               app.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://zeptojs.com/">Zepto.js</a> is used for event handling</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">$ = </span><span class="nx">Zepto</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Start the game loop</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">$</span> <span class="o">-&gt;</span> 
+  <span class="nv">game = </span><span class="k">new</span> <span class="nx">Game</span>
+  <span class="nx">game</span><span class="p">.</span><span class="nx">run</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nx">World</span>
+  <span class="nv">width: </span><span class="mi">512</span>
+  <span class="nv">height: </span><span class="mi">480</span>
+  <span class="nv">viewWidth: </span><span class="mi">400</span>
+  <span class="nv">viewHeight: </span><span class="mi">300</span>
+  <span class="nv">sprites: </span><span class="p">[]</span>
+
+  <span class="nv">constructor: </span><span class="o">-&gt;</span>
+    <span class="vi">@ctx = </span><span class="nx">@createCanvas</span><span class="p">()</span>
+    <span class="vi">@hero = </span><span class="k">new</span> <span class="nx">Hero</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+    <span class="nx">@sprites</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Background</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+    <span class="nx">@sprites</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Monster</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+    <span class="nx">@sprites</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">@hero</span><span class="p">)</span>
+
+  <span class="nv">createCanvas: </span><span class="o">-&gt;</span>
+    <span class="nv">canvas = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;canvas&quot;</span><span class="p">)</span>
+    <span class="nv">canvas.width = </span><span class="nx">@viewWidth</span>
+    <span class="nv">canvas.height = </span><span class="nx">@viewHeight</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">canvas</span><span class="p">)</span>
+    <span class="nx">canvas</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">)</span>
+
+  <span class="nv">reset: </span><span class="o">-&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">reset</span><span class="p">(</span><span class="nx">@width</span><span class="p">,</span> <span class="nx">@height</span><span class="p">)</span>
+
+  <span class="nv">heroViewOffsetX: </span><span class="o">-&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">viewOffsetX</span><span class="p">(</span><span class="nx">@viewWidth</span><span class="p">)</span>
+  <span class="nv">heroViewOffsetY: </span><span class="o">-&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">viewOffsetY</span><span class="p">(</span><span class="nx">@viewHeight</span><span class="p">)</span>
+
+  <span class="nv">viewWidthLimit: </span> <span class="o">-&gt;</span> <span class="nx">@width</span>  <span class="o">-</span> <span class="nx">@viewWidth</span>
+  <span class="nv">viewHeightLimit: </span><span class="o">-&gt;</span> <span class="nx">@height</span> <span class="o">-</span> <span class="nx">@viewHeight</span>
+
+  <span class="nv">render: </span><span class="o">-&gt;</span> 
+    <span class="nv">heroOffsetX = </span><span class="nx">@hero</span><span class="p">.</span><span class="nx">viewOffsetX</span><span class="p">(</span><span class="nx">@viewWidth</span><span class="p">)</span>
+    <span class="nv">heroOffsetY = </span><span class="nx">@hero</span><span class="p">.</span><span class="nx">viewOffsetY</span><span class="p">(</span><span class="nx">@viewHeight</span><span class="p">)</span>
+    <span class="nx">sprite</span><span class="p">.</span><span class="nx">draw</span><span class="p">()</span> <span class="k">for</span> <span class="nx">sprite</span> <span class="k">in</span> <span class="nx">@sprites</span>
+
+  <span class="nv">up: </span>   <span class="nf">(mod) -&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">up</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span>
+  <span class="nv">down: </span> <span class="nf">(mod) -&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">down</span><span class="p">(</span><span class="nx">mod</span><span class="p">,</span> <span class="nx">@height</span><span class="p">)</span>
+  <span class="nv">left: </span> <span class="nf">(mod) -&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span>
+  <span class="nv">right: </span><span class="nf">(mod) -&gt;</span> <span class="nx">@hero</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">mod</span><span class="p">,</span> <span class="nx">@width</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nx">Sprite</span>
+  <span class="nv">ready: </span><span class="kc">false</span>
+  <span class="nv">sx: </span><span class="mi">0</span>
+  <span class="nv">sy: </span><span class="mi">0</span>
+  <span class="nv">sw: </span><span class="mi">0</span>
+  <span class="nv">sh: </span><span class="mi">0</span>
+  <span class="nv">dx: </span><span class="mi">0</span>
+  <span class="nv">dy: </span><span class="mi">0</span>
+  <span class="nv">dw: </span><span class="mi">0</span>
+  <span class="nv">dh: </span><span class="mi">0</span>
+  <span class="nv">x: </span><span class="mi">0</span>
+  <span class="nv">y: </span><span class="mi">0</span>
+
+  <span class="nv">constructor: </span><span class="nf">(@world) -&gt;</span>
+    <span class="nv">image = </span><span class="k">new</span> <span class="nx">Image</span>
+    <span class="nv">image.src = </span><span class="nx">@imageUrl</span>
+    <span class="nv">image.onload = </span><span class="o">=&gt;</span> <span class="vi">@ready = </span><span class="kc">true</span>
+    <span class="vi">@image = </span><span class="nx">image</span>
+
+  <span class="nv">heroLeftOfCentre: </span>  <span class="o">-&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetX</span><span class="p">()</span>
+  <span class="nv">heroAboveCentre: </span>   <span class="o">-&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetY</span><span class="p">()</span>
+  <span class="nv">heroRightOfCentre: </span> <span class="o">-&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">viewWidthLimit</span><span class="p">()</span> <span class="o">+</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetX</span><span class="p">()</span>
+  <span class="nv">heroBelowCentre: </span>   <span class="o">-&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">viewHeightLimit</span><span class="p">()</span> <span class="o">+</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetY</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nx">Background</span> <span class="k">extends</span> <span class="nx">Sprite</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>512x480</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">imageUrl: </span><span class="s2">&quot;images/background.png&quot;</span>
+
+  <span class="nv">constructor: </span><span class="nf">(world) -&gt;</span>
+    <span class="vi">@dw = </span><span class="nx">world</span><span class="p">.</span><span class="nx">viewWidth</span>
+    <span class="vi">@dh = </span><span class="nx">world</span><span class="p">.</span><span class="nx">viewHeight</span>
+    <span class="vi">@sw = </span><span class="nx">world</span><span class="p">.</span><span class="nx">viewWidth</span>
+    <span class="vi">@sh = </span><span class="nx">world</span><span class="p">.</span><span class="nx">viewHeight</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">world</span><span class="p">)</span>
+
+  <span class="nv">draw: </span><span class="o">-&gt;</span> 
+    <span class="nv">x = </span><span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetX</span><span class="p">()</span>
+    <span class="nv">y = </span><span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetY</span><span class="p">()</span>
+    <span class="nv">x = </span><span class="mi">0</span> <span class="k">if</span> <span class="nx">@heroLeftOfCentre</span><span class="p">()</span>
+    <span class="nv">y = </span><span class="mi">0</span> <span class="k">if</span> <span class="nx">@heroAboveCentre</span><span class="p">()</span>
+    <span class="nv">x = </span><span class="nx">@world</span><span class="p">.</span><span class="nx">viewWidthLimit</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@heroRightOfCentre</span><span class="p">()</span>
+    <span class="nv">y = </span><span class="nx">@world</span><span class="p">.</span><span class="nx">viewHeightLimit</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@heroBelowCentre</span><span class="p">()</span>
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">drawImage</span><span class="p">(</span><span class="nx">@image</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">@sw</span><span class="p">,</span> <span class="nx">@sh</span><span class="p">,</span> <span class="nx">@dx</span><span class="p">,</span> <span class="nx">@dy</span><span class="p">,</span> <span class="nx">@dw</span><span class="p">,</span> <span class="nx">@dh</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@ready</span>
+
+<span class="k">class</span> <span class="nx">Entity</span> <span class="k">extends</span> <span class="nx">Sprite</span>
+  <span class="nv">drawOffset: </span><span class="nf">(x, y) -&gt;</span>
+    <span class="nv">x = </span><span class="nx">@x</span> <span class="k">if</span> <span class="nx">@heroLeftOfCentre</span><span class="p">()</span>
+    <span class="nv">y = </span><span class="nx">@y</span> <span class="k">if</span> <span class="nx">@heroAboveCentre</span><span class="p">()</span>
+    <span class="nv">x = </span><span class="nx">@x</span> <span class="o">-</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">viewWidthLimit</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@heroRightOfCentre</span><span class="p">()</span>
+    <span class="nv">y = </span><span class="nx">@y</span> <span class="o">-</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">viewHeightLimit</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@heroBelowCentre</span><span class="p">()</span>
+
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">drawImage</span><span class="p">(</span><span class="nx">@image</span><span class="p">,</span> <span class="nx">@sx</span><span class="p">,</span> <span class="nx">@sy</span><span class="p">,</span> <span class="nx">@sw</span><span class="p">,</span> <span class="nx">@sh</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">@dw</span><span class="p">,</span> <span class="nx">@dh</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@ready</span>
+
+
+<span class="k">class</span> <span class="nx">Monster</span> <span class="k">extends</span> <span class="nx">Entity</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>30 x 32</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">speed: </span><span class="mi">128</span>
+  <span class="nv">imageUrl: </span><span class="s2">&quot;images/monster.png&quot;</span>
+  <span class="nv">x: </span><span class="mi">400</span>
+  <span class="nv">y: </span><span class="mi">400</span>
+  <span class="nv">sw: </span><span class="mi">30</span>
+  <span class="nv">sh: </span><span class="mi">32</span>
+  <span class="nv">dw: </span><span class="mi">30</span>
+  <span class="nv">dh: </span><span class="mi">32</span>
+
+  <span class="nv">draw: </span><span class="o">-&gt;</span> 
+    <span class="nv">x = </span><span class="nx">@x</span> <span class="o">-</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetX</span><span class="p">()</span>
+    <span class="nv">y = </span><span class="nx">@y</span> <span class="o">-</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">hero</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetY</span><span class="p">()</span>
+    <span class="nx">@drawOffset</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nx">Hero</span> <span class="k">extends</span> <span class="nx">Entity</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>32 x 32</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">sw: </span><span class="mi">32</span>
+  <span class="nv">sh: </span><span class="mi">32</span>
+  <span class="nv">dw: </span><span class="mi">32</span>
+  <span class="nv">dh: </span><span class="mi">32</span>
+  <span class="nv">speed: </span><span class="mi">256</span>
+  <span class="nv">imageUrl: </span><span class="s2">&quot;images/hero.png&quot;</span>
+
+  <span class="nv">draw: </span><span class="o">-&gt;</span> <span class="nx">@drawOffset</span><span class="p">(</span><span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetX</span><span class="p">(),</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">heroViewOffsetY</span><span class="p">())</span>
+
+  <span class="nv">velocity: </span><span class="nf">(mod) -&gt;</span> <span class="nx">@speed</span> <span class="o">*</span> <span class="nx">mod</span>
+
+  <span class="nv">up: </span>   <span class="nf">(mod)         -&gt;</span> <span class="nx">@y</span> <span class="o">-=</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@y</span> <span class="o">-</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+  <span class="nv">down: </span> <span class="nf">(mod, height) -&gt;</span> <span class="nx">@y</span> <span class="o">+=</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@y</span> <span class="o">+</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">height</span> <span class="o">-</span> <span class="nx">@dh</span>
+  <span class="nv">left: </span> <span class="nf">(mod)         -&gt;</span> <span class="nx">@x</span> <span class="o">-=</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@x</span> <span class="o">-</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+  <span class="nv">right: </span><span class="nf">(mod, width)  -&gt;</span> <span class="nx">@x</span> <span class="o">+=</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@x</span> <span class="o">+</span> <span class="nx">@velocity</span><span class="p">(</span><span class="nx">mod</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">width</span> <span class="o">-</span> <span class="nx">@dw</span>
+
+  <span class="nv">viewOffsetX: </span><span class="nf">(width)  -&gt;</span> <span class="p">(</span><span class="nx">width</span> <span class="sr">/ 2)   - (@dw /</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="nv">viewOffsetY: </span><span class="nf">(height) -&gt;</span> <span class="p">(</span><span class="nx">height</span> <span class="sr">/ 2)  - (@dh /</span> <span class="mi">2</span><span class="p">)</span>
+
+  <span class="nv">reset: </span><span class="nf">(width, height) -&gt;</span>
+    <span class="vi">@x = </span><span class="nx">@viewOffsetX</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
+    <span class="vi">@y = </span><span class="nx">@viewOffsetY</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nx">InputHandler</span>
+  <span class="nv">keysDown: </span><span class="p">{}</span>
+
+  <span class="nv">constructor: </span><span class="nf">(@world) -&gt;</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">keydown</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">@keysDown</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">keyup</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span>   <span class="o">=&gt;</span> <span class="k">delete</span> <span class="nx">@keysDown</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span><span class="p">]</span>
+
+  <span class="nv">update: </span><span class="nf">(modifier) -&gt;</span>
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">up</span><span class="p">(</span><span class="nx">modifier</span><span class="p">)</span>    <span class="k">if</span> <span class="mi">38</span> <span class="k">of</span> <span class="nx">@keysDown</span>
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">down</span><span class="p">(</span><span class="nx">modifier</span><span class="p">)</span>  <span class="k">if</span> <span class="mi">40</span> <span class="k">of</span> <span class="nx">@keysDown</span>
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">modifier</span><span class="p">)</span>  <span class="k">if</span> <span class="mi">37</span> <span class="k">of</span> <span class="nx">@keysDown</span>
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">modifier</span><span class="p">)</span> <span class="k">if</span> <span class="mi">39</span> <span class="k">of</span> <span class="nx">@keysDown</span>
+
+<span class="k">class</span> <span class="nx">Game</span>
+  <span class="nv">setup: </span><span class="o">-&gt;</span>
+    <span class="vi">@world = </span><span class="k">new</span> <span class="nx">World</span>
+    <span class="vi">@inputHandler = </span><span class="k">new</span> <span class="nx">InputHandler</span><span class="p">(</span><span class="nx">@world</span><span class="p">)</span>
+
+  <span class="nv">reset: </span><span class="o">-&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">reset</span><span class="p">()</span>
+
+  <span class="nv">update: </span><span class="nf">(modifier) -&gt;</span> <span class="nx">@inputHandler</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">modifier</span><span class="p">)</span>
+
+  <span class="nv">render: </span><span class="o">-&gt;</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
+
+  <span class="nv">main: </span><span class="o">=&gt;</span>
+    <span class="nv">now = </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="nv">delta = </span><span class="nx">now</span> <span class="o">-</span> <span class="nx">@then</span>
+    <span class="nx">@update</span><span class="p">(</span><span class="nx">delta</span> <span class="err">/ 1000)</span>
+    <span class="nx">@render</span><span class="p">()</span>
+    <span class="vi">@then = </span><span class="nx">now</span>
+
+  <span class="nv">run: </span><span class="o">-&gt;</span>
+    <span class="nx">@setup</span><span class="p">()</span>
+    <span class="nx">@reset</span><span class="p">()</span>
+    <span class="vi">@then = </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="nx">setInterval</span><span class="p">(</span><span class="nx">@main</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

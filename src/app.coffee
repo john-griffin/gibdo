@@ -1,4 +1,9 @@
+# [Zepto.js](http://zeptojs.com/) is used for event handling
+
 $ = Zepto
+
+# Start the game loop
+
 $ -> 
   game = new Game
   game.run()
