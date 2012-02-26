@@ -37,7 +37,7 @@
       canvas = document.createElement("canvas");
       canvas.width = this.viewWidth;
       canvas.height = this.viewHeight;
-      document.body.appendChild(canvas);
+      $("body").append(canvas);
       return canvas.getContext("2d");
     };
 

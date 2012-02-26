@@ -26,7 +26,7 @@ class World
     canvas = document.createElement("canvas")
     canvas.width = @viewWidth
     canvas.height = @viewHeight
-    document.body.appendChild(canvas)
+    $("body").append(canvas)
     canvas.getContext("2d")
 
   reset: -> @hero.reset(@width, @height)
