@@ -37,6 +37,11 @@ class World
   viewWidthLimit:  -> @width  - @viewWidth
   viewHeightLimit: -> @height - @viewHeight
 
+  atViewLimitLeft:   -> @hero.x < @heroViewOffsetX()
+  atViewLimitTop:    -> @hero.y < @heroViewOffsetY()
+  atViewLimitRight:  -> @hero.x > @viewWidthLimit() + @heroViewOffsetX()
+  atViewLimitBottom: -> @hero.y > @viewHeightLimit() + @heroViewOffsetY()
+
   render: -> 
     heroOffsetX = @hero.viewOffsetX(@viewWidth)
     heroOffsetY = @hero.viewOffsetY(@viewHeight)
@@ -66,11 +71,6 @@ class Sprite
     image.onload = => @ready = true
     @image = image
 
-  heroLeftOfCentre:   -> @world.hero.x < @world.heroViewOffsetX()
-  heroAboveCentre:    -> @world.hero.y < @world.heroViewOffsetY()
-  heroRightOfCentre:  -> @world.hero.x > @world.viewWidthLimit() + @world.heroViewOffsetX()
-  heroBelowCentre:    -> @world.hero.y > @world.viewHeightLimit() + @world.heroViewOffsetY()
-
 class Background extends Sprite
   # 512x480
   imageUrl: "images/background.png"
@@ -85,18 +85,18 @@ class Background extends Sprite
   draw: -> 
     x = @world.hero.x - @world.heroViewOffsetX()
     y = @world.hero.y - @world.heroViewOffsetY()
-    x = 0 if @heroLeftOfCentre()
-    y = 0 if @heroAboveCentre()
-    x = @world.viewWidthLimit() if @heroRightOfCentre()
-    y = @world.viewHeightLimit() if @heroBelowCentre()
+    x = 0 if @world.atViewLimitLeft()
+    y = 0 if @world.atViewLimitTop()
+    x = @world.viewWidthLimit() if @world.atViewLimitRight()
+    y = @world.viewHeightLimit() if @world.atViewLimitBottom()
     @world.ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
 
 class Entity extends Sprite
   drawOffset: (x, y) ->
-    x = @x if @heroLeftOfCentre()
-    y = @y if @heroAboveCentre()
-    x = @x - @world.viewWidthLimit() if @heroRightOfCentre()
-    y = @y - @world.viewHeightLimit() if @heroBelowCentre()
+    x = @x if @world.atViewLimitLeft()
+    y = @y if @world.atViewLimitTop()
+    x = @x - @world.viewWidthLimit() if @world.atViewLimitRight()
+    y = @y - @world.viewHeightLimit() if @world.atViewLimitBottom()
 
     @world.ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
 

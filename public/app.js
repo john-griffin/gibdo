@@ -61,6 +61,22 @@
       return this.height - this.viewHeight;
     };
 
+    World.prototype.atViewLimitLeft = function() {
+      return this.hero.x < this.heroViewOffsetX();
+    };
+
+    World.prototype.atViewLimitTop = function() {
+      return this.hero.y < this.heroViewOffsetY();
+    };
+
+    World.prototype.atViewLimitRight = function() {
+      return this.hero.x > this.viewWidthLimit() + this.heroViewOffsetX();
+    };
+
+    World.prototype.atViewLimitBottom = function() {
+      return this.hero.y > this.viewHeightLimit() + this.heroViewOffsetY();
+    };
+
     World.prototype.render = function() {
       var heroOffsetX, heroOffsetY, sprite, _i, _len, _ref, _results;
       heroOffsetX = this.hero.viewOffsetX(this.viewWidth);
@@ -130,22 +146,6 @@
       this.image = image;
     }
 
-    Sprite.prototype.heroLeftOfCentre = function() {
-      return this.world.hero.x < this.world.heroViewOffsetX();
-    };
-
-    Sprite.prototype.heroAboveCentre = function() {
-      return this.world.hero.y < this.world.heroViewOffsetY();
-    };
-
-    Sprite.prototype.heroRightOfCentre = function() {
-      return this.world.hero.x > this.world.viewWidthLimit() + this.world.heroViewOffsetX();
-    };
-
-    Sprite.prototype.heroBelowCentre = function() {
-      return this.world.hero.y > this.world.viewHeightLimit() + this.world.heroViewOffsetY();
-    };
-
     return Sprite;
 
   })();
@@ -168,10 +168,10 @@
       var x, y;
       x = this.world.hero.x - this.world.heroViewOffsetX();
       y = this.world.hero.y - this.world.heroViewOffsetY();
-      if (this.heroLeftOfCentre()) x = 0;
-      if (this.heroAboveCentre()) y = 0;
-      if (this.heroRightOfCentre()) x = this.world.viewWidthLimit();
-      if (this.heroBelowCentre()) y = this.world.viewHeightLimit();
+      if (this.world.atViewLimitLeft()) x = 0;
+      if (this.world.atViewLimitTop()) y = 0;
+      if (this.world.atViewLimitRight()) x = this.world.viewWidthLimit();
+      if (this.world.atViewLimitBottom()) y = this.world.viewHeightLimit();
       if (this.ready) {
         return this.world.ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
       }
@@ -190,10 +190,12 @@
     }
 
     Entity.prototype.drawOffset = function(x, y) {
-      if (this.heroLeftOfCentre()) x = this.x;
-      if (this.heroAboveCentre()) y = this.y;
-      if (this.heroRightOfCentre()) x = this.x - this.world.viewWidthLimit();
-      if (this.heroBelowCentre()) y = this.y - this.world.viewHeightLimit();
+      if (this.world.atViewLimitLeft()) x = this.x;
+      if (this.world.atViewLimitTop()) y = this.y;
+      if (this.world.atViewLimitRight()) x = this.x - this.world.viewWidthLimit();
+      if (this.world.atViewLimitBottom()) {
+        y = this.y - this.world.viewHeightLimit();
+      }
       if (this.ready) {
         return this.world.ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
       }
