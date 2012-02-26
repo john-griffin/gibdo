@@ -146,6 +146,12 @@
       this.image = image;
     }
 
+    Sprite.prototype.drawImage = function(sx, sy, dx, dy) {
+      if (this.ready) {
+        return this.world.ctx.drawImage(this.image, sx, sy, this.sw, this.sh, dx, dy, this.dw, this.dh);
+      }
+    };
+
     return Sprite;
 
   })();
@@ -172,9 +178,7 @@
       if (this.world.atViewLimitTop()) y = 0;
       if (this.world.atViewLimitRight()) x = this.world.viewWidthLimit();
       if (this.world.atViewLimitBottom()) y = this.world.viewHeightLimit();
-      if (this.ready) {
-        return this.world.ctx.drawImage(this.image, x, y, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
-      }
+      return this.drawImage(x, y, this.dx, this.dy);
     };
 
     return Background;
@@ -196,9 +200,7 @@
       if (this.world.atViewLimitBottom()) {
         y = this.y - this.world.viewHeightLimit();
       }
-      if (this.ready) {
-        return this.world.ctx.drawImage(this.image, this.sx, this.sy, this.sw, this.sh, x, y, this.dw, this.dh);
-      }
+      return this.drawImage(this.sx, this.sy, x, y);
     };
 
     return Entity;

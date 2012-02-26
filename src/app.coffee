@@ -71,6 +71,10 @@ class Sprite
     image.onload = => @ready = true
     @image = image
 
+  drawImage: (sx, sy, dx, dy) ->
+    if @ready
+      @world.ctx.drawImage(@image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
+
 class Background extends Sprite
   # 512x480
   imageUrl: "images/background.png"
@@ -89,7 +93,7 @@ class Background extends Sprite
     y = 0 if @world.atViewLimitTop()
     x = @world.viewWidthLimit() if @world.atViewLimitRight()
     y = @world.viewHeightLimit() if @world.atViewLimitBottom()
-    @world.ctx.drawImage(@image, x, y, @sw, @sh, @dx, @dy, @dw, @dh) if @ready
+    @drawImage(x, y, @dx, @dy)
 
 class Entity extends Sprite
   drawOffset: (x, y) ->
@@ -97,9 +101,7 @@ class Entity extends Sprite
     y = @y if @world.atViewLimitTop()
     x = @x - @world.viewWidthLimit() if @world.atViewLimitRight()
     y = @y - @world.viewHeightLimit() if @world.atViewLimitBottom()
-
-    @world.ctx.drawImage(@image, @sx, @sy, @sw, @sh, x, y, @dw, @dh) if @ready
-
+    @drawImage(@sx, @sy, x, y)
 
 class Monster extends Entity
   # 30 x 32
