@@ -23,14 +23,15 @@ class Game
 
   main: =>
     now = Date.now()
-    delta = now - @then
+    delta = now - @lastUpdate
+    @lastUpdate = now
+    @lastElapsed = delta
     @update(delta / 1000)
     @render()
-    @then = now
 
   update: (modifier) -> @inputHandler.update(modifier)
 
-  render: -> @world.render()
+  render: -> @world.render(@lastUpdate, @lastElapsed)
 
 class World
   width: 512
@@ -66,10 +67,16 @@ class World
   atViewLimitRight:  -> @hero.x > @viewWidthLimit() + @heroViewOffsetX()
   atViewLimitBottom: -> @hero.y > @viewHeightLimit() + @heroViewOffsetY()
 
-  render: -> 
+  render: (lastUpdate, lastElapsed) -> 
     heroOffsetX = @hero.viewOffsetX(@viewWidth)
     heroOffsetY = @hero.viewOffsetY(@viewHeight)
     sprite.draw() for sprite in @sprites
+    @ctx.save()
+    @ctx.fillStyle = "rgb(241, 241, 242)"
+    @ctx.font = "Bold 20px Monospace"
+    @ctx.fillText("Elapsed: #{lastElapsed}", 10, 20)
+    @ctx.fillText("#{Math.round(1e3 / lastElapsed)} FPS", 10, 50)
+    @ctx.restore()
 
   up:    (mod) -> @hero.up(mod)
   down:  (mod) -> @hero.down(mod, @height)
@@ -175,7 +182,7 @@ class Hero extends Entity
   dw: 32
   dh: 32
   speed: 256
-  imageUrls: ["images/hero_down1.png"]
+  imageUrls: ["images/hero_down1.png", "images/hero_down2.png"]
 
   draw: -> 
     @dx = @world.heroViewOffsetX()

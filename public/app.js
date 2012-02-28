@@ -37,10 +37,11 @@
     Game.prototype.main = function() {
       var delta, now;
       now = Date.now();
-      delta = now - this.then;
+      delta = now - this.lastUpdate;
+      this.lastUpdate = now;
+      this.lastElapsed = delta;
       this.update(delta / 1000);
-      this.render();
-      return this.then = now;
+      return this.render();
     };
 
     Game.prototype.update = function(modifier) {
@@ -48,7 +49,7 @@
     };
 
     Game.prototype.render = function() {
-      return this.world.render();
+      return this.world.render(this.lastUpdate, this.lastElapsed);
     };
 
     return Game;
@@ -120,17 +121,21 @@
       return this.hero.y > this.viewHeightLimit() + this.heroViewOffsetY();
     };
 
-    World.prototype.render = function() {
-      var heroOffsetX, heroOffsetY, sprite, _i, _len, _ref, _results;
+    World.prototype.render = function(lastUpdate, lastElapsed) {
+      var heroOffsetX, heroOffsetY, sprite, _i, _len, _ref;
       heroOffsetX = this.hero.viewOffsetX(this.viewWidth);
       heroOffsetY = this.hero.viewOffsetY(this.viewHeight);
       _ref = this.sprites;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sprite = _ref[_i];
-        _results.push(sprite.draw());
+        sprite.draw();
       }
-      return _results;
+      this.ctx.save();
+      this.ctx.fillStyle = "rgb(241, 241, 242)";
+      this.ctx.font = "Bold 20px Monospace";
+      this.ctx.fillText("Elapsed: " + lastElapsed, 10, 20);
+      this.ctx.fillText("" + (Math.round(1e3 / lastElapsed)) + " FPS", 10, 50);
+      return this.ctx.restore();
     };
 
     World.prototype.up = function(mod) {
@@ -355,7 +360,7 @@
 
     Hero.prototype.speed = 256;
 
-    Hero.prototype.imageUrls = ["images/hero_down1.png"];
+    Hero.prototype.imageUrls = ["images/hero_down1.png", "images/hero_down2.png"];
 
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
