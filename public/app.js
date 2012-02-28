@@ -226,6 +226,8 @@
 
     Sprite.prototype.y = 0;
 
+    Sprite.prototype.currentFrame = 0;
+
     Sprite.prototype.imagesReady = function() {
       var image, _i, _len, _ref;
       _ref = this.images;
@@ -246,7 +248,7 @@
     Sprite.prototype.drawImage = function(sx, sy, dx, dy) {
       var image;
       if (this.imagesReady()) {
-        image = this.images[0].image;
+        image = this.images[this.currentFrame].image;
         return this.world.ctx.drawImage(image, sx, sy, this.sw, this.sh, dx, dy, this.dw, this.dh);
       }
     };
@@ -365,6 +367,7 @@
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
       this.dy = this.world.heroViewOffsetY();
+      this.currentFrame = Math.round(this.x + this.y) % 2;
       return Hero.__super__.draw.apply(this, arguments);
     };
 

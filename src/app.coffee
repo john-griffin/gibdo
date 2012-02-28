@@ -76,6 +76,7 @@ class World
     @ctx.font = "Bold 20px Monospace"
     @ctx.fillText("Elapsed: #{lastElapsed}", 10, 20)
     @ctx.fillText("#{Math.round(1e3 / lastElapsed)} FPS", 10, 50)
+    # @ctx.fillText("Player pos #{Math.round(@hero.x)%4}, #{Math.round(@hero.y)%4}", 10, 80)
     @ctx.restore()
 
   up:    (mod) -> @hero.up(mod)
@@ -116,6 +117,7 @@ class Sprite
   dh: 0
   x: 0
   y: 0
+  currentFrame: 0
 
   imagesReady: ->
     for image in @images
@@ -127,8 +129,7 @@ class Sprite
 
   drawImage: (sx, sy, dx, dy) ->
     if @imagesReady()
-      image = @images[0].image
-      # console.log image
+      image = @images[@currentFrame].image
       @world.ctx.drawImage(image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
 
 class Background extends Sprite
@@ -187,6 +188,7 @@ class Hero extends Entity
   draw: -> 
     @dx = @world.heroViewOffsetX()
     @dy = @world.heroViewOffsetY()
+    @currentFrame = Math.round(@x+@y)%2
     super
 
   velocity: (mod) -> @speed * mod
