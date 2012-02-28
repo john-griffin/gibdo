@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Entity, Game, Hero, InputHandler, Monster, Sprite, World,
+  var $, Background, Entity, Game, Hero, InputHandler, Monster, Sprite, SpriteImage, World,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -179,9 +179,27 @@
 
   })();
 
-  Sprite = (function() {
+  SpriteImage = (function() {
 
-    Sprite.prototype.ready = false;
+    SpriteImage.prototype.ready = false;
+
+    function SpriteImage(url) {
+      var image,
+        _this = this;
+      this.url = url;
+      image = new Image;
+      image.src = this.url;
+      image.onload = function() {
+        return _this.ready = true;
+      };
+      this.image = image;
+    }
+
+    return SpriteImage;
+
+  })();
+
+  Sprite = (function() {
 
     Sprite.prototype.sx = 0;
 
@@ -203,25 +221,28 @@
 
     Sprite.prototype.y = 0;
 
-    function Sprite(world) {
-      var image, imageUrl, _i, _len, _ref,
-        _this = this;
-      this.world = world;
-      _ref = this.imageUrls;
+    Sprite.prototype.imagesReady = function() {
+      var image, _i, _len, _ref;
+      _ref = this.images;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        imageUrl = _ref[_i];
-        image = new Image;
-        image.src = imageUrl;
-        image.onload = function() {
-          return _this.ready = true;
-        };
-        this.image = image;
+        image = _ref[_i];
+        if (!image.ready) return false;
       }
+      return true;
+    };
+
+    function Sprite(world) {
+      this.world = world;
+      this.images = this.imageUrls.map(function(imageUrl) {
+        return new SpriteImage(imageUrl);
+      });
     }
 
     Sprite.prototype.drawImage = function(sx, sy, dx, dy) {
-      if (this.ready) {
-        return this.world.ctx.drawImage(this.image, sx, sy, this.sw, this.sh, dx, dy, this.dw, this.dh);
+      var image;
+      if (this.imagesReady()) {
+        image = this.images[0].image;
+        return this.world.ctx.drawImage(image, sx, sy, this.sw, this.sh, dx, dy, this.dw, this.dh);
       }
     };
 

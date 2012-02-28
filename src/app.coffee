@@ -89,8 +89,16 @@ class InputHandler
     @world.left(modifier)  if 37 of @keysDown
     @world.right(modifier) if 39 of @keysDown
 
-class Sprite
+class SpriteImage
   ready: false
+
+  constructor: (@url) ->
+    image = new Image
+    image.src = @url
+    image.onload = => @ready = true
+    @image = image
+
+class Sprite
   sx: 0
   sy: 0
   sw: 0
@@ -102,16 +110,19 @@ class Sprite
   x: 0
   y: 0
 
+  imagesReady: ->
+    for image in @images
+      return false unless image.ready
+    true
+
   constructor: (@world) ->
-    for imageUrl in @imageUrls
-      image = new Image
-      image.src = imageUrl
-      image.onload = => @ready = true
-      @image = image
+    @images = @imageUrls.map (imageUrl) -> new SpriteImage(imageUrl)
 
   drawImage: (sx, sy, dx, dy) ->
-    if @ready
-      @world.ctx.drawImage(@image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
+    if @imagesReady()
+      image = @images[0].image
+      # console.log image
+      @world.ctx.drawImage(image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
 
 class Background extends Sprite
   # 512x480
