@@ -103,10 +103,11 @@ class Sprite
   y: 0
 
   constructor: (@world) ->
-    image = new Image
-    image.src = @imageUrl
-    image.onload = => @ready = true
-    @image = image
+    for imageUrl in @imageUrls
+      image = new Image
+      image.src = imageUrl
+      image.onload = => @ready = true
+      @image = image
 
   drawImage: (sx, sy, dx, dy) ->
     if @ready
@@ -114,7 +115,7 @@ class Sprite
 
 class Background extends Sprite
   # 512x480
-  imageUrl: "images/background.png"
+  imageUrls: ["images/background.png"]
 
   constructor: (world) ->
     @dw = world.viewWidth
@@ -143,7 +144,7 @@ class Entity extends Sprite
 class Monster extends Entity
   # 30 x 32
   speed: 128
-  imageUrl: "images/monster.png"
+  imageUrls: ["images/monster.png"]
   x: 400
   y: 400
   sw: 30
@@ -163,7 +164,7 @@ class Hero extends Entity
   dw: 32
   dh: 32
   speed: 256
-  imageUrl: "images/hero_down1.png"
+  imageUrls: ["images/hero_down1.png"]
 
   draw: -> 
     @dx = @world.heroViewOffsetX()

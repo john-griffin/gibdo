@@ -204,15 +204,19 @@
     Sprite.prototype.y = 0;
 
     function Sprite(world) {
-      var image,
+      var image, imageUrl, _i, _len, _ref,
         _this = this;
       this.world = world;
-      image = new Image;
-      image.src = this.imageUrl;
-      image.onload = function() {
-        return _this.ready = true;
-      };
-      this.image = image;
+      _ref = this.imageUrls;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        imageUrl = _ref[_i];
+        image = new Image;
+        image.src = imageUrl;
+        image.onload = function() {
+          return _this.ready = true;
+        };
+        this.image = image;
+      }
     }
 
     Sprite.prototype.drawImage = function(sx, sy, dx, dy) {
@@ -229,7 +233,7 @@
 
     __extends(Background, _super);
 
-    Background.prototype.imageUrl = "images/background.png";
+    Background.prototype.imageUrls = ["images/background.png"];
 
     function Background(world) {
       this.dw = world.viewWidth;
@@ -288,7 +292,7 @@
 
     Monster.prototype.speed = 128;
 
-    Monster.prototype.imageUrl = "images/monster.png";
+    Monster.prototype.imageUrls = ["images/monster.png"];
 
     Monster.prototype.x = 400;
 
@@ -330,7 +334,7 @@
 
     Hero.prototype.speed = 256;
 
-    Hero.prototype.imageUrl = "images/hero_down1.png";
+    Hero.prototype.imageUrls = ["images/hero_down1.png"];
 
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
