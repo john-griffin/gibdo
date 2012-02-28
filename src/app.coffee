@@ -163,7 +163,7 @@ class Hero extends Entity
   dw: 32
   dh: 32
   speed: 256
-  imageUrl: "images/hero.png"
+  imageUrl: "images/hero_down1.png"
 
   draw: -> 
     @dx = @world.heroViewOffsetX()

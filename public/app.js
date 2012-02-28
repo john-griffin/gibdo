@@ -330,7 +330,7 @@
 
     Hero.prototype.speed = 256;
 
-    Hero.prototype.imageUrl = "images/hero.png";
+    Hero.prototype.imageUrl = "images/hero_down1.png";
 
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
