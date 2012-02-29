@@ -182,7 +182,7 @@ class Hero extends Entity
   draw: -> 
     @dx = @world.heroViewOffsetX()
     @dy = @world.heroViewOffsetY()
-    @sx = if Math.round(@x+@y)%2 == 0 then @direction else @direction + 32
+    @sx = if Math.round(@x+@y)%64 < 32 then @direction else @direction + 32
     super
 
   velocity: (mod) -> @speed * mod

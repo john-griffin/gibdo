@@ -353,7 +353,7 @@
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
       this.dy = this.world.heroViewOffsetY();
-      this.sx = Math.round(this.x + this.y) % 2 === 0 ? this.direction : this.direction + 32;
+      this.sx = Math.round(this.x + this.y) % 64 < 32 ? this.direction : this.direction + 32;
       return Hero.__super__.draw.apply(this, arguments);
     };
 
