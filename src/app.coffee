@@ -74,9 +74,7 @@ class World
     @ctx.save()
     @ctx.fillStyle = "rgb(241, 241, 242)"
     @ctx.font = "Bold 20px Monospace"
-    @ctx.fillText("Elapsed: #{lastElapsed}", 10, 20)
-    @ctx.fillText("#{Math.round(1e3 / lastElapsed)} FPS", 10, 50)
-    # @ctx.fillText("Player pos #{Math.round(@hero.x)%4}, #{Math.round(@hero.y)%4}", 10, 80)
+    @ctx.fillText("#{Math.round(1e3 / lastElapsed)} FPS", 10, 20)
     @ctx.restore()
 
   up:    (mod) -> @hero.up(mod)

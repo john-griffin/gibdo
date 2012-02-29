@@ -133,8 +133,7 @@
       this.ctx.save();
       this.ctx.fillStyle = "rgb(241, 241, 242)";
       this.ctx.font = "Bold 20px Monospace";
-      this.ctx.fillText("Elapsed: " + lastElapsed, 10, 20);
-      this.ctx.fillText("" + (Math.round(1e3 / lastElapsed)) + " FPS", 10, 50);
+      this.ctx.fillText("" + (Math.round(1e3 / lastElapsed)) + " FPS", 10, 20);
       return this.ctx.restore();
     };
 
