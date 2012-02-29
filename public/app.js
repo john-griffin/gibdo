@@ -348,10 +348,12 @@
 
     Hero.prototype.sy = 512;
 
+    Hero.prototype.direction = 0;
+
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
       this.dy = this.world.heroViewOffsetY();
-      this.sx = Math.round(this.x + this.y) % 2 === 0 ? 0 : 32;
+      this.sx = Math.round(this.x + this.y) % 2 === 0 ? this.direction : this.direction + 32;
       return Hero.__super__.draw.apply(this, arguments);
     };
 
@@ -360,20 +362,24 @@
     };
 
     Hero.prototype.up = function(mod) {
+      this.direction = 64;
       if (this.y - this.velocity(mod) > 0) return this.y -= this.velocity(mod);
     };
 
     Hero.prototype.down = function(mod, height) {
+      this.direction = 0;
       if (this.y + this.velocity(mod) < height - this.dh) {
         return this.y += this.velocity(mod);
       }
     };
 
     Hero.prototype.left = function(mod) {
+      this.direction = 128;
       if (this.x - this.velocity(mod) > 0) return this.x -= this.velocity(mod);
     };
 
     Hero.prototype.right = function(mod, width) {
+      this.direction = 192;
       if (this.x + this.velocity(mod) < width - this.dw) {
         return this.x += this.velocity(mod);
       }
