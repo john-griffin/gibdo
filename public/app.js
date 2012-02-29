@@ -188,10 +188,11 @@
 
     SpriteImage.prototype.ready = false;
 
-    function SpriteImage(url) {
+    SpriteImage.prototype.url = "images/sheet.png";
+
+    function SpriteImage() {
       var image,
         _this = this;
-      this.url = url;
       image = new Image;
       image.src = this.url;
       image.onload = function() {
@@ -226,30 +227,15 @@
 
     Sprite.prototype.y = 0;
 
-    Sprite.prototype.currentFrame = 0;
-
-    Sprite.prototype.imagesReady = function() {
-      var image, _i, _len, _ref;
-      _ref = this.images;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        image = _ref[_i];
-        if (!image.ready) return false;
-      }
-      return true;
-    };
+    Sprite.prototype.image = new SpriteImage;
 
     function Sprite(world) {
       this.world = world;
-      this.images = this.imageUrls.map(function(imageUrl) {
-        return new SpriteImage(imageUrl);
-      });
     }
 
     Sprite.prototype.drawImage = function(sx, sy, dx, dy) {
-      var image;
-      if (this.imagesReady()) {
-        image = this.images[this.currentFrame].image;
-        return this.world.ctx.drawImage(image, sx, sy, this.sw, this.sh, dx, dy, this.dw, this.dh);
+      if (this.image.ready) {
+        return this.world.ctx.drawImage(this.image.image, sx, sy, this.sw, this.sh, dx, dy, this.dw, this.dh);
       }
     };
 
@@ -260,8 +246,6 @@
   Background = (function(_super) {
 
     __extends(Background, _super);
-
-    Background.prototype.imageUrls = ["images/background.png"];
 
     function Background(world) {
       this.dw = world.viewWidth;
@@ -320,8 +304,6 @@
 
     Monster.prototype.speed = 128;
 
-    Monster.prototype.imageUrls = ["images/monster.png"];
-
     Monster.prototype.x = 400;
 
     Monster.prototype.y = 400;
@@ -333,6 +315,8 @@
     Monster.prototype.dw = 30;
 
     Monster.prototype.dh = 32;
+
+    Monster.prototype.sy = 480;
 
     Monster.prototype.draw = function() {
       this.dx = this.x - this.world.hero.x + this.world.heroViewOffsetX();
@@ -362,12 +346,12 @@
 
     Hero.prototype.speed = 256;
 
-    Hero.prototype.imageUrls = ["images/hero_down1.png", "images/hero_down2.png"];
+    Hero.prototype.sy = 512;
 
     Hero.prototype.draw = function() {
       this.dx = this.world.heroViewOffsetX();
       this.dy = this.world.heroViewOffsetY();
-      this.currentFrame = Math.round(this.x + this.y) % 2;
+      this.sx = Math.round(this.x + this.y) % 2 === 0 ? 0 : 32;
       return Hero.__super__.draw.apply(this, arguments);
     };
 

@@ -99,8 +99,9 @@ class InputHandler
 
 class SpriteImage
   ready: false
+  url: "images/sheet.png"
 
-  constructor: (@url) ->
+  constructor: ->
     image = new Image
     image.src = @url
     image.onload = => @ready = true
@@ -117,24 +118,16 @@ class Sprite
   dh: 0
   x: 0
   y: 0
-  currentFrame: 0
-
-  imagesReady: ->
-    for image in @images
-      return false unless image.ready
-    true
+  image: new SpriteImage
 
   constructor: (@world) ->
-    @images = @imageUrls.map (imageUrl) -> new SpriteImage(imageUrl)
 
   drawImage: (sx, sy, dx, dy) ->
-    if @imagesReady()
-      image = @images[@currentFrame].image
-      @world.ctx.drawImage(image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
+    if @image.ready
+      @world.ctx.drawImage(@image.image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
 
 class Background extends Sprite
   # 512x480
-  imageUrls: ["images/background.png"]
 
   constructor: (world) ->
     @dw = world.viewWidth
@@ -163,13 +156,13 @@ class Entity extends Sprite
 class Monster extends Entity
   # 30 x 32
   speed: 128
-  imageUrls: ["images/monster.png"]
   x: 400
   y: 400
   sw: 30
   sh: 32
   dw: 30
   dh: 32
+  sy: 480
 
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
@@ -183,12 +176,12 @@ class Hero extends Entity
   dw: 32
   dh: 32
   speed: 256
-  imageUrls: ["images/hero_down1.png", "images/hero_down2.png"]
+  sy: 512
 
   draw: -> 
     @dx = @world.heroViewOffsetX()
     @dy = @world.heroViewOffsetY()
-    @currentFrame = Math.round(@x+@y)%2
+    @sx = if Math.round(@x+@y)%2 == 0 then 0 else 32
     super
 
   velocity: (mod) -> @speed * mod
