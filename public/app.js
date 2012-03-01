@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Entity, Game, Hero, InputHandler, Monster, Sprite, SpriteImage, World,
+  var $, Background, Collumn, Entity, Game, Hero, InputHandler, Monster, Sprite, SpriteImage, World,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -73,6 +73,7 @@
       this.hero = new Hero(this);
       this.sprites.push(new Background(this));
       this.sprites.push(new Monster(this));
+      this.sprites.push(new Collumn(this));
       this.sprites.push(this.hero);
     }
 
@@ -324,6 +325,38 @@
     };
 
     return Monster;
+
+  })(Entity);
+
+  Collumn = (function(_super) {
+
+    __extends(Collumn, _super);
+
+    function Collumn() {
+      Collumn.__super__.constructor.apply(this, arguments);
+    }
+
+    Collumn.prototype.x = 300;
+
+    Collumn.prototype.y = 300;
+
+    Collumn.prototype.sw = 32;
+
+    Collumn.prototype.sh = 32;
+
+    Collumn.prototype.dw = 32;
+
+    Collumn.prototype.dh = 32;
+
+    Collumn.prototype.sy = 544;
+
+    Collumn.prototype.draw = function() {
+      this.dx = this.x - this.world.hero.x + this.world.heroViewOffsetX();
+      this.dy = this.y - this.world.hero.y + this.world.heroViewOffsetY();
+      return Collumn.__super__.draw.apply(this, arguments);
+    };
+
+    return Collumn;
 
   })(Entity);
 

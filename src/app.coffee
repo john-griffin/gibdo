@@ -45,6 +45,7 @@ class World
     @hero = new Hero(this)
     @sprites.push(new Background(this))
     @sprites.push(new Monster(this))
+    @sprites.push(new Collumn(this))
     @sprites.push(@hero)
 
   createCanvas: ->
@@ -161,6 +162,20 @@ class Monster extends Entity
   dw: 30
   dh: 32
   sy: 480
+
+  draw: -> 
+    @dx = @x - @world.hero.x + @world.heroViewOffsetX()
+    @dy = @y - @world.hero.y + @world.heroViewOffsetY()
+    super
+
+class Collumn extends Entity
+  x: 300
+  y: 300
+  sw: 32
+  sh: 32
+  dw: 32
+  dh: 32
+  sy: 544
 
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
