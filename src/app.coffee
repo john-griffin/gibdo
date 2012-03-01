@@ -1,3 +1,5 @@
+# ![Screenshot](game.png)
+
 # [Zepto.js](http://zeptojs.com/) is used for event handling
 
 $ = Zepto
