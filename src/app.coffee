@@ -43,9 +43,10 @@ class World
   constructor: ->
     @ctx = @createCanvas()
     @hero = new Hero(this)
+    @collumn = new Collumn(this)
     @sprites.push(new Background(this))
     @sprites.push(new Monster(this))
-    @sprites.push(new Collumn(this))
+    @sprites.push(@collumn)
     @sprites.push(@hero)
 
   createCanvas: ->
@@ -200,18 +201,26 @@ class Hero extends Entity
 
   velocity: (mod) -> @speed * mod
 
+  collision: (x, y) ->
+    c = @world.collumn
+    y > c.y - @dh and y < c.y + c.dh and x > c.x - @dw and x < c.x + c.dw
+
   up: (mod) -> 
     @direction = 64
-    @y -= @velocity(mod) if @y - @velocity(mod) > 0
+    y = @y - @velocity(mod)
+    @y -= @velocity(mod) if y > 0 and !@collision(@x, y)
   down: (mod, height) -> 
     @direction = 0
-    @y += @velocity(mod) if @y + @velocity(mod) < height - @dh
+    y = @y + @velocity(mod)
+    @y += @velocity(mod) if y < height - @dh and !@collision(@x, y)
   left: (mod) -> 
     @direction = 128
-    @x -= @velocity(mod) if @x - @velocity(mod) > 0
+    x = @x - @velocity(mod)
+    @x -= @velocity(mod) if x > 0 and !@collision(x, @y)
   right: (mod, width) -> 
     @direction = 192
-    @x += @velocity(mod) if @x + @velocity(mod) < width - @dw
+    x = @x + @velocity(mod)
+    @x += @velocity(mod) if x < width - @dw and !@collision(x, @y)
 
   viewOffsetX: (width)  -> (width / 2)   - (@dw / 2)
   viewOffsetY: (height) -> (height / 2)  - (@dh / 2)

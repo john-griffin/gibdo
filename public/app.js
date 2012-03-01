@@ -71,9 +71,10 @@
     function World() {
       this.ctx = this.createCanvas();
       this.hero = new Hero(this);
+      this.collumn = new Collumn(this);
       this.sprites.push(new Background(this));
       this.sprites.push(new Monster(this));
-      this.sprites.push(new Collumn(this));
+      this.sprites.push(this.collumn);
       this.sprites.push(this.hero);
     }
 
@@ -393,26 +394,40 @@
       return this.speed * mod;
     };
 
+    Hero.prototype.collision = function(x, y) {
+      var c;
+      c = this.world.collumn;
+      return y > c.y - this.dh && y < c.y + c.dh && x > c.x - this.dw && x < c.x + c.dw;
+    };
+
     Hero.prototype.up = function(mod) {
+      var y;
       this.direction = 64;
-      if (this.y - this.velocity(mod) > 0) return this.y -= this.velocity(mod);
+      y = this.y - this.velocity(mod);
+      if (y > 0 && !this.collision(this.x, y)) return this.y -= this.velocity(mod);
     };
 
     Hero.prototype.down = function(mod, height) {
+      var y;
       this.direction = 0;
-      if (this.y + this.velocity(mod) < height - this.dh) {
+      y = this.y + this.velocity(mod);
+      if (y < height - this.dh && !this.collision(this.x, y)) {
         return this.y += this.velocity(mod);
       }
     };
 
     Hero.prototype.left = function(mod) {
+      var x;
       this.direction = 128;
-      if (this.x - this.velocity(mod) > 0) return this.x -= this.velocity(mod);
+      x = this.x - this.velocity(mod);
+      if (x > 0 && !this.collision(x, this.y)) return this.x -= this.velocity(mod);
     };
 
     Hero.prototype.right = function(mod, width) {
+      var x;
       this.direction = 192;
-      if (this.x + this.velocity(mod) < width - this.dw) {
+      x = this.x + this.velocity(mod);
+      if (x < width - this.dw && !this.collision(x, this.y)) {
         return this.x += this.velocity(mod);
       }
     };
