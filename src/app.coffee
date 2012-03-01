@@ -84,6 +84,8 @@ class World
   left:  (mod) -> @hero.left(mod)
   right: (mod) -> @hero.right(mod, @width)
 
+  collidableSprites: -> sprite for sprite in @sprites when sprite.collidable
+
 class InputHandler
   keysDown: {}
 
@@ -119,6 +121,7 @@ class Sprite
   x: 0
   y: 0
   image: new SpriteImage
+  collidable: false
 
   constructor: (@world) ->
 
@@ -163,6 +166,7 @@ class Monster extends Entity
   dw: 30
   dh: 32
   sy: 480
+  collidable: true
 
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
@@ -177,6 +181,7 @@ class Collumn extends Entity
   dw: 32
   dh: 32
   sy: 544
+  collidable: true
 
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
@@ -202,8 +207,9 @@ class Hero extends Entity
   velocity: (mod) -> @speed * mod
 
   collision: (x, y) ->
-    c = @world.collumn
-    y > c.y - @dh and y < c.y + c.dh and x > c.x - @dw and x < c.x + c.dw
+    for o in @world.collidableSprites()
+      return true if y > o.y - @dh and y < o.y + o.dh and x > o.x - @dw and x < o.x + o.dw
+    false
 
   up: (mod) -> 
     @direction = 64

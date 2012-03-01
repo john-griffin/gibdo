@@ -155,6 +155,17 @@
       return this.hero.right(mod, this.width);
     };
 
+    World.prototype.collidableSprites = function() {
+      var sprite, _i, _len, _ref, _results;
+      _ref = this.sprites;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        sprite = _ref[_i];
+        if (sprite.collidable) _results.push(sprite);
+      }
+      return _results;
+    };
+
     return World;
 
   })();
@@ -229,6 +240,8 @@
     Sprite.prototype.y = 0;
 
     Sprite.prototype.image = new SpriteImage;
+
+    Sprite.prototype.collidable = false;
 
     function Sprite(world) {
       this.world = world;
@@ -319,6 +332,8 @@
 
     Monster.prototype.sy = 480;
 
+    Monster.prototype.collidable = true;
+
     Monster.prototype.draw = function() {
       this.dx = this.x - this.world.hero.x + this.world.heroViewOffsetX();
       this.dy = this.y - this.world.hero.y + this.world.heroViewOffsetY();
@@ -350,6 +365,8 @@
     Collumn.prototype.dh = 32;
 
     Collumn.prototype.sy = 544;
+
+    Collumn.prototype.collidable = true;
 
     Collumn.prototype.draw = function() {
       this.dx = this.x - this.world.hero.x + this.world.heroViewOffsetX();
@@ -395,9 +412,15 @@
     };
 
     Hero.prototype.collision = function(x, y) {
-      var c;
-      c = this.world.collumn;
-      return y > c.y - this.dh && y < c.y + c.dh && x > c.x - this.dw && x < c.x + c.dw;
+      var o, _i, _len, _ref;
+      _ref = this.world.collidableSprites();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        o = _ref[_i];
+        if (y > o.y - this.dh && y < o.y + o.dh && x > o.x - this.dw && x < o.x + o.dw) {
+          return true;
+        }
+      }
+      return false;
     };
 
     Hero.prototype.up = function(mod) {
