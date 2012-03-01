@@ -388,15 +388,15 @@
 
     Hero.prototype.sw = 32;
 
-    Hero.prototype.sh = 32;
+    Hero.prototype.sh = 30;
 
     Hero.prototype.dw = 32;
 
-    Hero.prototype.dh = 32;
+    Hero.prototype.dh = 30;
 
     Hero.prototype.speed = 256;
 
-    Hero.prototype.sy = 512;
+    Hero.prototype.sy = 513;
 
     Hero.prototype.direction = 0;
 

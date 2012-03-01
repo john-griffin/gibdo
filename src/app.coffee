@@ -191,11 +191,11 @@ class Collumn extends Entity
 class Hero extends Entity
   # 32 x 32
   sw: 32
-  sh: 32
+  sh: 30
   dw: 32
-  dh: 32
+  dh: 30
   speed: 256
-  sy: 512
+  sy: 513
   direction: 0
 
   draw: -> 
