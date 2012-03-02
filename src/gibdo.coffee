@@ -21,8 +21,8 @@ $ ->
   game = new Game
   game.run()
 
+# ## Game
 # The game class handles top level game loop and initialisation.
-
 class Game
   # Start the game in a default state and initiate the game loop. 
   # It attempts to run the loop every 1 millisecond but in reality 
@@ -58,6 +58,7 @@ class Game
   # Tell the world to rerender itself.
   render: -> @world.render(@lastUpdate, @lastElapsed)
 
+# ## World
 # The World class manages the game world and what can be seen
 # by the player.
 class World
@@ -103,10 +104,12 @@ class World
   atViewLimitRight:  -> @hero.x > @viewWidthLimit() + @heroViewOffsetX()
   atViewLimitBottom: -> @hero.y > @viewHeightLimit() + @heroViewOffsetY()
 
+  # Tell all the sprites to render.
   render: (lastUpdate, lastElapsed) -> 
     sprite.draw() for sprite in @sprites
     @renderDebugOverlay(lastElapsed)
 
+  # Show the frames per second at the top of the view.
   renderDebugOverlay: (lastElapsed) ->
     @ctx.save()
     @ctx.fillStyle = "rgb(241, 241, 242)"
@@ -114,26 +117,36 @@ class World
     @ctx.fillText("#{Math.round(1e3 / lastElapsed)} FPS", 10, 20)
     @ctx.restore()
 
+  # Pass any keyboard events that come in from the input
+  # handler off to the hero.
   up:    (mod) -> @hero.up(mod)
   down:  (mod) -> @hero.down(mod, @height)
   left:  (mod) -> @hero.left(mod)
   right: (mod) -> @hero.right(mod, @width)
 
+  # Find the sprites that have collision detection enabled.
   collidableSprites: -> sprite for sprite in @sprites when sprite.collidable
 
+# ## InputHandler
+# Responsible for dealing with keyboard input.
 class InputHandler
   keysDown: {}
 
+  # Listen for keys being presses and being released. As this happens
+  # add and remove them from the key store.
   constructor: (@world) ->
     $("body").keydown (e) => @keysDown[e.keyCode] = true
     $("body").keyup (e)   => delete @keysDown[e.keyCode]
 
+  # Everytime update is called from the game loop act on the currently
+  # pressed keys by passing the events on to the world.
   update: (modifier) ->
     @world.up(modifier)    if 38 of @keysDown
     @world.down(modifier)  if 40 of @keysDown
     @world.left(modifier)  if 37 of @keysDown
     @world.right(modifier) if 39 of @keysDown
 
+# ## SpriteImage
 class SpriteImage
   ready: false
   url: "images/sheet.png"
@@ -144,6 +157,7 @@ class SpriteImage
     image.onload = => @ready = true
     @image = image
 
+# ## Sprite
 class Sprite
   sx: 0
   sy: 0
@@ -164,6 +178,7 @@ class Sprite
     if @image.ready
       @world.ctx.drawImage(@image.image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
 
+# ## Background
 class Background extends Sprite
   # 512x480
 
@@ -183,6 +198,7 @@ class Background extends Sprite
     y = @world.viewHeightLimit() if @world.atViewLimitBottom()
     @drawImage(x, y, @dx, @dy)
 
+# ## Entity
 class Entity extends Sprite
   draw: ->
     @dx = @x if @world.atViewLimitLeft()
@@ -191,6 +207,7 @@ class Entity extends Sprite
     @dy = @y - @world.viewHeightLimit() if @world.atViewLimitBottom()
     @drawImage(@sx, @sy, @dx, @dy)
 
+# ## Monster
 class Monster extends Entity
   # 30 x 32
   speed: 128
@@ -208,6 +225,7 @@ class Monster extends Entity
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
     super
 
+# ## Collumn
 class Collumn extends Entity
   x: 300
   y: 300
@@ -223,6 +241,7 @@ class Collumn extends Entity
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
     super
 
+# ## Hero
 class Hero extends Entity
   # 32 x 32
   sw: 32
