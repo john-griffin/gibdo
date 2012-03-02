@@ -1,5 +1,12 @@
 # ![Screenshot](game.png)
 
+# Gibdo is a starting point for creating HTML5 Canvas games in a top-down 2D style. It is written in [CoffeeScript](http://coffeescript.org/) and provides the following features,
+# 
+# * Scrolling the view window as the player moves.
+# * Collision detection.
+# * Keyboard input.
+# * Sprite animation.
+
 # [Zepto.js](http://zeptojs.com/) is used for event handling
 
 $ = Zepto
