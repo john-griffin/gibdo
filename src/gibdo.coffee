@@ -1,8 +1,12 @@
 # ![Screenshot](game.png)
 
-# Gibdo is a starting point for creating HTML5 Canvas games in a top-down 2D style. It is written in [CoffeeScript](http://coffeescript.org/) and provides the following features,
+# Gibdo is a starting point for creating HTML5 Canvas games in a 
+# top-down 2D style. It is written in [CoffeeScript](http://coffeescript.org/) 
+# and provides the following features,
 # 
-# * Scrolling the view window as the player moves.
+# * A scrolling view window that tracks the player across the game world.
+# * View edge detection to allow the player to move off the centre
+# of the screen as edges are reached.
 # * Collision detection.
 # * Keyboard input.
 # * Sprite animation.
@@ -11,25 +15,35 @@
 
 $ = Zepto
 
-# Start the game loop
+# Create a new instance of the game and get it running.
 
 $ -> 
   game = new Game
   game.run()
 
+# The game class handles top level game loop and initialisation.
+
 class Game
+  # Start the game in a default state and initiate the game loop. 
+  # It attempts to run the loop every 1 millisecond but in reality 
+  # the loop is just running as fast as it can.  
   run: ->
     @setup()
     @reset()
     @then = Date.now()
     setInterval(@main, 1)
 
+  # Create a new game world and keyboard input handler
   setup: ->
     @world = new World
     @inputHandler = new InputHandler(@world)
 
+  # Nothing is reset at this level so just ask the world to reset itself.
   reset: -> @world.reset()
 
+  # The main game loop. Establish the time since the loop last ran
+  # in seconds and pass that through to the update method for recalculating
+  # sprite positions. After recalulation positions, render the sprites.
   main: =>
     now = Date.now()
     delta = now - @lastUpdate
@@ -38,10 +52,14 @@ class Game
     @update(delta / 1000)
     @render()
 
+  # Updates are handled by the input handler.
   update: (modifier) -> @inputHandler.update(modifier)
 
+  # Tell the world to rerender itself.
   render: -> @world.render(@lastUpdate, @lastElapsed)
 
+# The World class manages the game world and what can be seen
+# by the player.
 class World
   width: 512
   height: 480
@@ -49,6 +67,8 @@ class World
   viewHeight: 300
   sprites: []
 
+  # When the world is created it adds a canvas to the page and
+  # inserts all the sprites that are needed into the sprite array.
   constructor: ->
     @ctx = @createCanvas()
     @hero = new Hero(this)
@@ -58,6 +78,7 @@ class World
     @sprites.push(@collumn)
     @sprites.push(@hero)
 
+  # Create an HTML5 canvas element and append it to the document
   createCanvas: ->
     canvas = document.createElement("canvas")
     canvas.width = @viewWidth
@@ -65,14 +86,18 @@ class World
     $("body").append(canvas)
     canvas.getContext("2d")
 
+  # Only the hero (player character) needs to be reset.
   reset: -> @hero.reset(@width, @height)
 
+  # The co-ordinates the hero occupies in the centre of the view.
   heroViewOffsetX: -> @hero.viewOffsetX(@viewWidth)
   heroViewOffsetY: -> @hero.viewOffsetY(@viewHeight)
 
+  # The maximum co-ordinates the view can scroll to.
   viewWidthLimit:  -> @width  - @viewWidth
   viewHeightLimit: -> @height - @viewHeight
 
+  # Check to see if the hero is at the limits of the world.
   atViewLimitLeft:   -> @hero.x < @heroViewOffsetX()
   atViewLimitTop:    -> @hero.y < @heroViewOffsetY()
   atViewLimitRight:  -> @hero.x > @viewWidthLimit() + @heroViewOffsetX()
