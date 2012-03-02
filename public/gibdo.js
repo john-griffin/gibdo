@@ -130,6 +130,10 @@
         sprite = _ref[_i];
         sprite.draw();
       }
+      return this.renderDebugOverlay(lastElapsed);
+    };
+
+    World.prototype.renderDebugOverlay = function(lastElapsed) {
       this.ctx.save();
       this.ctx.fillStyle = "rgb(241, 241, 242)";
       this.ctx.font = "Bold 20px Monospace";

@@ -105,6 +105,9 @@ class World
 
   render: (lastUpdate, lastElapsed) -> 
     sprite.draw() for sprite in @sprites
+    @renderDebugOverlay(lastElapsed)
+
+  renderDebugOverlay: (lastElapsed) ->
     @ctx.save()
     @ctx.fillStyle = "rgb(241, 241, 242)"
     @ctx.font = "Bold 20px Monospace"
