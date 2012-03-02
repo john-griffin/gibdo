@@ -104,8 +104,6 @@ class World
   atViewLimitBottom: -> @hero.y > @viewHeightLimit() + @heroViewOffsetY()
 
   render: (lastUpdate, lastElapsed) -> 
-    heroOffsetX = @hero.viewOffsetX(@viewWidth)
-    heroOffsetY = @hero.viewOffsetY(@viewHeight)
     sprite.draw() for sprite in @sprites
     @ctx.save()
     @ctx.fillStyle = "rgb(241, 241, 242)"

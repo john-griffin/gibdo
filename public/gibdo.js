@@ -124,9 +124,7 @@
     };
 
     World.prototype.render = function(lastUpdate, lastElapsed) {
-      var heroOffsetX, heroOffsetY, sprite, _i, _len, _ref;
-      heroOffsetX = this.hero.viewOffsetX(this.viewWidth);
-      heroOffsetY = this.hero.viewOffsetY(this.viewHeight);
+      var sprite, _i, _len, _ref;
       _ref = this.sprites;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sprite = _ref[_i];
