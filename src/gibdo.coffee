@@ -161,9 +161,10 @@ class SpriteImage
     @image = image
 
 # ## Sprite
-# The base class from which all the sprite inherit.
+# The base class from which all sprites get their draw function
+# and default values from.
 class Sprite
-  # Configure sane defaults for sprite positions and dimensions
+  # Configure sane defaults for sprite positions and dimensions.
   sx: 0 # Source x position
   sy: 0 # Source y position
   sw: 0 # Source width
@@ -179,14 +180,17 @@ class Sprite
 
   constructor: (@world) ->
 
+  # If the image is loaded then draw the sprite on to the canvas.
   drawImage: (sx, sy, dx, dy) ->
     if @image.ready
       @world.ctx.drawImage(@image.image, sx, sy, @sw, @sh, dx, dy, @dw, @dh)
 
 # ## Background
+# The sprite that represents the floor or level on which the other sprites
+# walk around on.
 class Background extends Sprite
-  # 512x480
-
+  # As the background represents the entire world it's source image
+  # has the same dimensions.
   constructor: (world) ->
     @dw = world.viewWidth
     @dh = world.viewHeight
@@ -194,20 +198,29 @@ class Background extends Sprite
     @sh = world.viewHeight
     super(world)
 
-  draw: -> 
+  draw: ->
+    # The background moves as the hero does.
     x = @world.hero.x - @world.heroViewOffsetX()
     y = @world.hero.y - @world.heroViewOffsetY()
+    # Prevent the background from scrolling at the start of the world.
     x = 0 if @world.atViewLimitLeft()
     y = 0 if @world.atViewLimitTop()
+    # Prevent the background from scrolling at the end of the world.
     x = @world.viewWidthLimit() if @world.atViewLimitRight()
     y = @world.viewHeightLimit() if @world.atViewLimitBottom()
     @drawImage(x, y, @dx, @dy)
 
 # ## Entity
+# Entities are non-background sprites that share a common draw
+# function as they need to be offset from the player differently.
 class Entity extends Sprite
   draw: ->
+    # When the view is at the start of the world the sprites can be
+    # drawn at their full world co-ordinates.
     @dx = @x if @world.atViewLimitLeft()
     @dy = @y if @world.atViewLimitTop()
+    # When the view is at the end of the world the sprites are drawn
+    # as an offset from the edge of the world.
     @dx = @x - @world.viewWidthLimit() if @world.atViewLimitRight()
     @dy = @y - @world.viewHeightLimit() if @world.atViewLimitBottom()
     @drawImage(@sx, @sy, @dx, @dy)
