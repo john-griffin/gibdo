@@ -1,5 +1,5 @@
 (function() {
-  var $, Background, Collumn, Entity, Game, Hero, InputHandler, Monster, Sprite, SpriteImage, World,
+  var $, Background, Column, Entity, Game, Hero, InputHandler, Monster, Sprite, SpriteImage, World,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
@@ -71,10 +71,10 @@
     function World() {
       this.ctx = this.createCanvas();
       this.hero = new Hero(this);
-      this.collumn = new Collumn(this);
+      this.column = new Column(this);
       this.sprites.push(new Background(this));
       this.sprites.push(new Monster(this));
-      this.sprites.push(this.collumn);
+      this.sprites.push(this.column);
       this.sprites.push(this.hero);
     }
 
@@ -344,37 +344,37 @@
 
   })(Entity);
 
-  Collumn = (function(_super) {
+  Column = (function(_super) {
 
-    __extends(Collumn, _super);
+    __extends(Column, _super);
 
-    function Collumn() {
-      Collumn.__super__.constructor.apply(this, arguments);
+    function Column() {
+      Column.__super__.constructor.apply(this, arguments);
     }
 
-    Collumn.prototype.x = 300;
+    Column.prototype.x = 300;
 
-    Collumn.prototype.y = 300;
+    Column.prototype.y = 300;
 
-    Collumn.prototype.sw = 32;
+    Column.prototype.sw = 32;
 
-    Collumn.prototype.sh = 32;
+    Column.prototype.sh = 32;
 
-    Collumn.prototype.dw = 32;
+    Column.prototype.dw = 32;
 
-    Collumn.prototype.dh = 32;
+    Column.prototype.dh = 32;
 
-    Collumn.prototype.sy = 544;
+    Column.prototype.sy = 544;
 
-    Collumn.prototype.collidable = true;
+    Column.prototype.collidable = true;
 
-    Collumn.prototype.draw = function() {
+    Column.prototype.draw = function() {
       this.dx = this.x - this.world.hero.x + this.world.heroViewOffsetX();
       this.dy = this.y - this.world.hero.y + this.world.heroViewOffsetY();
-      return Collumn.__super__.draw.apply(this, arguments);
+      return Column.__super__.draw.apply(this, arguments);
     };
 
-    return Collumn;
+    return Column;
 
   })(Entity);
 

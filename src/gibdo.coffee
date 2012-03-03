@@ -43,7 +43,7 @@ class Game
 
   # The main game loop. Establish the time since the loop last ran
   # in seconds and pass that through to the update method for recalculating
-  # sprite positions. After recalulation positions, render the sprites.
+  # sprite positions. After recalculation positions, render the sprites.
   main: =>
     now = Date.now()
     delta = now - @lastUpdate
@@ -73,10 +73,10 @@ class World
   constructor: ->
     @ctx = @createCanvas()
     @hero = new Hero(this)
-    @collumn = new Collumn(this)
+    @column = new Column(this)
     @sprites.push(new Background(this))
     @sprites.push(new Monster(this))
-    @sprites.push(@collumn)
+    @sprites.push(@column)
     @sprites.push(@hero)
 
   # Create an HTML5 canvas element and append it to the document
@@ -138,7 +138,7 @@ class InputHandler
     $("body").keydown (e) => @keysDown[e.keyCode] = true
     $("body").keyup (e)   => delete @keysDown[e.keyCode]
 
-  # Everytime update is called from the game loop act on the currently
+  # Every time update is called from the game loop act on the currently
   # pressed keys by passing the events on to the world.
   update: (modifier) ->
     @world.up(modifier)    if 38 of @keysDown
@@ -238,15 +238,15 @@ class Monster extends Entity
   sy: 480
   collidable: true
 
-  # Offset the view co-ordiantes from the player.
+  # Offset the view co-ordinates from the player.
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
     super
 
-# ## Collumn
+# ## Column
 # Another example of a collidable stationary sprite.
-class Collumn extends Entity
+class Column extends Entity
   x:  300
   y:  300
   sw: 32
@@ -256,7 +256,7 @@ class Collumn extends Entity
   sy: 544
   collidable: true
 
-  # Offset the view co-ordiantes from the player.
+  # Offset the view co-ordinates from the player.
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
@@ -318,7 +318,7 @@ class Hero extends Entity
     x = @x + @velocity(mod)
     @x += @velocity(mod) if x < width - @dw and !@collision(x, @y)
 
-  # Helpers that the world uses to calculate the centre postion of the
+  # Helpers that the world uses to calculate the centre position of the
   # hero.
   viewOffsetX: (width)  -> (width / 2)   - (@dw / 2)
   viewOffsetY: (height) -> (height / 2)  - (@dh / 2)
