@@ -147,10 +147,13 @@ class InputHandler
     @world.right(modifier) if 39 of @keysDown
 
 # ## SpriteImage
+# Wraps sprite loading.
 class SpriteImage
   ready: false
   url: "images/sheet.png"
 
+  # Create a new image based on the sprite file and set
+  # ready to true when loaded.
   constructor: ->
     image = new Image
     image.src = @url
@@ -158,17 +161,19 @@ class SpriteImage
     @image = image
 
 # ## Sprite
+# The base class from which all the sprite inherit.
 class Sprite
-  sx: 0
-  sy: 0
-  sw: 0
-  sh: 0
-  dx: 0
-  dy: 0
-  dw: 0
-  dh: 0
-  x: 0
-  y: 0
+  # Configure sane defaults for sprite positions and dimensions
+  sx: 0 # Source x position
+  sy: 0 # Source y position
+  sw: 0 # Source width
+  sh: 0 # Source height
+  dx: 0 # Destination x position
+  dy: 0 # Destination y position
+  dw: 0 # Destination width
+  dh: 0 # Destination height
+  x:  0 # Position x in the world
+  y:  0 # Position y in the world
   image: new SpriteImage
   collidable: false
 
