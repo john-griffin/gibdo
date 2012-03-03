@@ -161,9 +161,10 @@ class SpriteImage
     @image = image
 
 # ## Sprite
-# The base class from which all sprites get their draw function
-# and default values from.
 class Sprite
+  # The base class from which all sprites get their draw function
+  # and default values from.
+  # 
   # Configure sane defaults for sprite positions and dimensions.
   sx: 0 # Source x position
   sy: 0 # Source y position
@@ -226,11 +227,10 @@ class Entity extends Sprite
     @drawImage(@sx, @sy, @dx, @dy)
 
 # ## Monster
+# An example collidable stationary sprite.
 class Monster extends Entity
-  # 30 x 32
-  speed: 128
-  x: 400
-  y: 400
+  x:  400
+  y:  400
   sw: 30
   sh: 32
   dw: 30
@@ -238,15 +238,17 @@ class Monster extends Entity
   sy: 480
   collidable: true
 
+  # Offset the view co-ordiantes from the player.
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
     super
 
 # ## Collumn
+# Another example of a collidable stationary sprite.
 class Collumn extends Entity
-  x: 300
-  y: 300
+  x:  300
+  y:  300
   sw: 32
   sh: 32
   dw: 32
@@ -254,6 +256,7 @@ class Collumn extends Entity
   sy: 544
   collidable: true
 
+  # Offset the view co-ordiantes from the player.
   draw: -> 
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
@@ -261,28 +264,43 @@ class Collumn extends Entity
 
 # ## Hero
 class Hero extends Entity
-  # 32 x 32
-  sw: 32
-  sh: 30
-  dw: 32
-  dh: 30
+  # The sprite that represents the player and can be controlled and
+  # moved through the world.
+  sw:    32
+  sh:    30
+  dw:    32
+  dh:    30
   speed: 256
-  sy: 513
+  sy:    513
   direction: 0
 
   draw: -> 
+    # By default the hero is drawn to the centre of the view.
     @dx = @world.heroViewOffsetX()
     @dy = @world.heroViewOffsetY()
+    # Alternate sprite frames as the player's position changes to
+    # create an animation effect.
     @sx = if Math.round(@x+@y)%64 < 32 then @direction else @direction + 32
     super
 
+  # The player's velocity is the default speed multiplied by the 
+  # current time difference.
   velocity: (mod) -> @speed * mod
 
+  # Detect a collision between the proposed new player co-ordinates
+  # and the collidable objects in the world. If the player's co-ordinates
+  # fall within their bounds then it has collided.
   collision: (x, y) ->
     for o in @world.collidableSprites()
       return true if y > o.y - @dh and y < o.y + o.dh and x > o.x - @dw and x < o.x + o.dw
     false
 
+  # Handle keyboard input. By changing the `@direction` value in each
+  # function the player's sprite changes and produces the effect that 
+  # makes the hero look in the direction he is travelling.
+  # 
+  # The player's position is modified in the direction of the key
+  # press if still inside the world and no collisions are detected.
   up: (mod) -> 
     @direction = 64
     y = @y - @velocity(mod)
@@ -300,9 +318,12 @@ class Hero extends Entity
     x = @x + @velocity(mod)
     @x += @velocity(mod) if x < width - @dw and !@collision(x, @y)
 
+  # Helpers that the world uses to calculate the centre postion of the
+  # hero.
   viewOffsetX: (width)  -> (width / 2)   - (@dw / 2)
   viewOffsetY: (height) -> (height / 2)  - (@dh / 2)
 
+  # The hero starts the game in the centre of the world.
   reset: (width, height) ->
     @x = @viewOffsetX(width)
     @y = @viewOffsetY(height)

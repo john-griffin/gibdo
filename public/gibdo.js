@@ -318,8 +318,6 @@
       Monster.__super__.constructor.apply(this, arguments);
     }
 
-    Monster.prototype.speed = 128;
-
     Monster.prototype.x = 400;
 
     Monster.prototype.y = 400;
