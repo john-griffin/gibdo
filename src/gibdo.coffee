@@ -5,7 +5,7 @@
 # and provides the following features,
 # 
 # * A scrolling view window that tracks the player across the game world.
-# * View edge detection to allow the player to move off the centre
+# * View limit detection to allow the player to move off the centre
 # of the screen as edges are reached.
 # * Collision detection.
 # * Keyboard input.
