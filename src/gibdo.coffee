@@ -1,4 +1,4 @@
-# ![Screenshot](game.png)
+# ![Screenshot](resources/game.png)
 
 # [Gibdo](https://github.com/john-griffin/gibdo) is a starting point for creating HTML5 Canvas games in a 
 # top-down 2D style. It is written in [CoffeeScript](http://coffeescript.org/) 
