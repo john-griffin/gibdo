@@ -11,7 +11,7 @@
 # * Keyboard input.
 # * Sprite animation.
 # 
-# Try it out [here](https://github.com/john-griffin/gibdo/public/index.html).
+# Try it out [here](http://john-griffin.github.com/gibdo/public/index.html).
 
 # [Zepto.js](http://zeptojs.com/) is used for event handling
 
