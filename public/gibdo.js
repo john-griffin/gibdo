@@ -83,7 +83,7 @@
       canvas = document.createElement("canvas");
       canvas.width = this.viewWidth;
       canvas.height = this.viewHeight;
-      $("body").append(canvas);
+      $(".container .game").append(canvas);
       return canvas.getContext("2d");
     };
 

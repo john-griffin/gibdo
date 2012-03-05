@@ -86,7 +86,7 @@ class World
     canvas = document.createElement("canvas")
     canvas.width = @viewWidth
     canvas.height = @viewHeight
-    $("body").append(canvas)
+    $(".container .game").append(canvas)
     canvas.getContext("2d")
 
   # Only the hero (player character) needs to be reset.
