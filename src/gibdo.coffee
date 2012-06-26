@@ -17,6 +17,13 @@
 
 $ = Zepto
 
+# Helper for animating efficiently using request animation frame when available
+
+window.requestAnimFrame = (->
+  window.requestAnimationFrame or window.webkitRequestAnimationFrame or window.mozRequestAnimationFrame or window.oRequestAnimationFrame or window.msRequestAnimationFrame or (callback, element) ->
+    window.setTimeout callback, 1000 / 60
+)()
+
 # Create a new instance of the game and get it running.
 
 $ -> 
@@ -33,7 +40,12 @@ class Game
     @setup()
     @reset()
     @then = Date.now()
-    setInterval(@main, 1)
+    @animate()
+
+  # Animate the game
+  animate: =>
+    requestAnimFrame(@animate)
+    @main()
 
   # Create a new game world and keyboard input handler
   setup: ->

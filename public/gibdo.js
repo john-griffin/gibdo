@@ -7,6 +7,12 @@
 
   $ = Zepto;
 
+  window.requestAnimFrame = (function() {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback, element) {
+      return window.setTimeout(callback, 1000 / 60);
+    };
+  })();
+
   $(function() {
     var game;
     game = new Game;
@@ -20,13 +26,20 @@
     function Game() {
       this.main = __bind(this.main, this);
 
+      this.animate = __bind(this.animate, this);
+
     }
 
     Game.prototype.run = function() {
       this.setup();
       this.reset();
       this.then = Date.now();
-      return setInterval(this.main, 1);
+      return this.animate();
+    };
+
+    Game.prototype.animate = function() {
+      requestAnimFrame(this.animate);
+      return this.main();
     };
 
     Game.prototype.setup = function() {
