@@ -1,16 +1,16 @@
 # ![Screenshot](resources/game.png)
 
-# [Gibdo](https://github.com/john-griffin/gibdo) is a starting point for creating HTML5 Canvas games in a 
-# top-down 2D style. It is written in [CoffeeScript](http://coffeescript.org/) 
+# [Gibdo](https://github.com/john-griffin/gibdo) is a starting point for creating HTML5 Canvas games in a
+# top-down 2D style. It is written in [CoffeeScript](http://coffeescript.org/)
 # and provides the following features,
-# 
+#
 # * A scrolling view window that tracks the player across the game world.
 # * View limit detection to allow the player to move off the centre
 # of the screen as edges are reached.
 # * Collision detection.
 # * Keyboard input.
 # * Sprite animation.
-# 
+#
 # Try it out [here](http://john-griffin.github.com/gibdo/public/index.html).
 
 # [Zepto.js](http://zeptojs.com/) is used for event handling
@@ -26,16 +26,16 @@ window.requestAnimFrame = (->
 
 # Create a new instance of the game and get it running.
 
-$ -> 
+$ ->
   game = new Game
   game.run()
 
 # ## Game
 # The game class handles top level game loop and initialisation.
 class Game
-  # Start the game in a default state and initiate the game loop. 
-  # It attempts to run the loop every 1 millisecond but in reality 
-  # the loop is just running as fast as it can.  
+  # Start the game in a default state and initiate the game loop.
+  # It attempts to run the loop every 1 millisecond but in reality
+  # the loop is just running as fast as it can.
   run: ->
     @setup()
     @reset()
@@ -119,7 +119,7 @@ class World
   atViewLimitBottom: -> @hero.y > @viewHeightLimit() + @heroViewOffsetY()
 
   # Tell all the sprites to render.
-  render: (lastUpdate, lastElapsed) -> 
+  render: (lastUpdate, lastElapsed) ->
     sprite.draw() for sprite in @sprites
     @renderDebugOverlay(lastElapsed)
 
@@ -178,7 +178,7 @@ class SpriteImage
 class Sprite
   # The base class from which all sprites get their draw function
   # and default values from.
-  # 
+  #
   # Configure sane defaults for sprite positions and dimensions.
   sx: 0 # Source x position
   sy: 0 # Source y position
@@ -253,7 +253,7 @@ class Monster extends Entity
   collidable: true
 
   # Offset the view co-ordinates from the player.
-  draw: -> 
+  draw: ->
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
     super
@@ -271,7 +271,7 @@ class Column extends Entity
   collidable: true
 
   # Offset the view co-ordinates from the player.
-  draw: -> 
+  draw: ->
     @dx = @x - @world.hero.x + @world.heroViewOffsetX()
     @dy = @y - @world.hero.y + @world.heroViewOffsetY()
     super
@@ -288,7 +288,7 @@ class Hero extends Entity
   sy:    513
   direction: 0
 
-  draw: -> 
+  draw: ->
     # By default the hero is drawn to the centre of the view.
     @dx = @world.heroViewOffsetX()
     @dy = @world.heroViewOffsetY()
@@ -297,7 +297,7 @@ class Hero extends Entity
     @sx = if Math.round(@x+@y)%64 < 32 then @direction else @direction + 32
     super
 
-  # The player's velocity is the default speed multiplied by the 
+  # The player's velocity is the default speed multiplied by the
   # current time difference.
   velocity: (mod) -> @speed * mod
 
@@ -310,24 +310,24 @@ class Hero extends Entity
     false
 
   # Handle keyboard input. By changing the `@direction` value in each
-  # function the player's sprite changes and produces the effect that 
+  # function the player's sprite changes and produces the effect that
   # makes the hero look in the direction he is travelling.
-  # 
+  #
   # The player's position is modified in the direction of the key
   # press if still inside the world and no collisions are detected.
-  up: (mod) -> 
+  up: (mod) ->
     @direction = 64
     y = @y - @velocity(mod)
     @y -= @velocity(mod) if y > 0 and !@collision(@x, y)
-  down: (mod, height) -> 
+  down: (mod, height) ->
     @direction = 0
     y = @y + @velocity(mod)
     @y += @velocity(mod) if y < height - @dh and !@collision(@x, y)
-  left: (mod) -> 
+  left: (mod) ->
     @direction = 128
     x = @x - @velocity(mod)
     @x -= @velocity(mod) if x > 0 and !@collision(x, @y)
-  right: (mod, width) -> 
+  right: (mod, width) ->
     @direction = 192
     x = @x + @velocity(mod)
     @x += @velocity(mod) if x < width - @dw and !@collision(x, @y)
